@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "postinstall": "npm rebuild bcrypt --build-from-source",
     "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
