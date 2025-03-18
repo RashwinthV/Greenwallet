@@ -4,7 +4,7 @@ import Footer from "./components/Footer";
 import Body from "./pages/Body";
 import Records from "./pages/Records";
 import Entry from "./pages/Entry";
-import Login from "./pages/Login";
+import Login from "./pages/login";
 import Register from "./pages/register";
 import { useState } from "react";
 import { ToastContainer } from "react-toastify";
