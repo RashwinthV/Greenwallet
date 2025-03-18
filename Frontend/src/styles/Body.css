@@ -1,0 +1,18 @@
+.body-container {
+    background: url(
+        "https://t3.ftcdn.net/jpg/02/05/56/54/360_F_205565499_waqtbwXp6KukIa7ilco7GfIErIjIK117.jpg"
+    ) no-repeat center center/cover;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  @media (max-width: 700px) {
+    .body-container {
+        background: url(
+            "https://i.pinimg.com/736x/04/e5/47/04e5479ee632f638057d6521582f2cd7.jpg"
+        )no-repeat center center/cover;
+    }
+  }
+  

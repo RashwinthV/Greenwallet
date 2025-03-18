@@ -1,0 +1,53 @@
+const translations = {
+    en: {
+      register: "Register",
+      name: "Name",
+      email: "Email",
+      password: "Password",
+      phoneNo: "Phone Number",
+      age: "Age",
+      gender: "Gender",
+      selectGender: "Select Gender",
+      male: "Male",
+      female: "Female",
+      other: "Other",
+      enterName: "Enter your name",
+      enterEmail: "Enter your email",
+      enterPassword: "Enter your password",
+      enterPhone: "Enter your phone number",
+      alreadyHaveAccount: "Already have an account?",
+      loginSuccess: "Login successful!",
+      loginFailed: "Login failed. Please check your details.",
+      dontHaveAccount: "Don't have an account?",
+      signUp: "Sign Up",
+      login: "Log In",
+    },
+    ta: {
+      register: "பதிவு செய்யவும்",
+      name: "பெயர்",
+      email: "மின்னஞ்சல்",
+      password: "கடவுச்சொல்",
+      phoneNo: "தொலைபேசி எண்",
+      age: "வயது",
+      gender: "பாலினம்",
+      selectGender: "பாலினத்தை தேர்வு செய்யவும்",
+      male: "ஆண்",
+      female: "பெண்",
+      other: "மற்றவை",
+      enterName: "உங்கள் பெயரை உள்ளிடவும்",
+      enterEmail: "உங்கள் மின்னஞ்சலை உள்ளிடவும்",
+      enterPassword: "உங்கள் கடவுச்சொல்லை உள்ளிடவும்",
+      enterPhone: "உங்கள் தொலைபேசி எண்ணை உள்ளிடவும்",
+      alreadyHaveAccount: "ஏற்கனவே ஒரு கணக்கு உள்ளதா?",
+      dontHaveAccount: "கணக்கு இல்லையா?",
+      signUp: "பதிவு செய்யவும்",
+      loginSuccess: "உள்நுழைவு வெற்றிகரமாக முடிந்தது!",
+      loginFailed: "உள்நுழைவு தோல்வியடைந்தது. தயவுசெய்து விவரங்களை சரிபார்க்கவும்.",
+      login: "உள்நுழையவும்",
+    },
+  };
+  
+  export default translations;
+   
+  
+  
