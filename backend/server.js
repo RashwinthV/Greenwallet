@@ -12,11 +12,8 @@ app.use(cookieParser());
 
 connectDB();
 
-const corsOptions = {
-  origin: ["http://localhost:5173", "https://greenwallet-frontend.onrender.com"],
-  credentials: true,
-};
-app.use(cors(corsOptions));
+
+app.use(cors());
 
 app.use("/user", userRoute);
 app.post("/login", Login);
