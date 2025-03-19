@@ -93,7 +93,7 @@ const Header = ({ language, setLanguage }) => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to={`/entry/${id}`}>
+              <Link className="nav-link" to={`/entry`}>
                 {texts[language].entry}
               </Link>
             </li>
