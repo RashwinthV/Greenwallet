@@ -20,14 +20,12 @@ exports.getproducts = async (req, res) => {
 exports.addRecord=async(req,res)=>{
     const { date, amount, type, productId, userId } = req.body;
 
-    // First, validate that the user exists (you may want to add more validation)
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found." });
     }
   
     try {
-      // Create a new record
       const newRecord = new Record({
         date,
         amount,
@@ -36,11 +34,9 @@ exports.addRecord=async(req,res)=>{
         userId
       });
   
-      // Save the record to the database
       await newRecord.save();
   
-      // Respond with the newly created record
-      return res.status(201).json({ success: true, message: "Record added successfully!", record: newRecord });
+       return res.status(201).json({ success: true, message: "Record added successfully!", record: newRecord });
     } catch (error) {
       console.error("Error creating record:", error);
       return res.status(500).json({ success: false, message: "Failed to create record." });

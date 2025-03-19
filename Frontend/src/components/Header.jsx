@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import AuthContext from "../context/Authcontextt";
 
 const Header = ({ language, setLanguage }) => {
   const texts = {
@@ -26,6 +27,9 @@ const Header = ({ language, setLanguage }) => {
     },
   };
 
+  const { user, logout } = useContext(AuthContext);
+  let users = user || " ";
+
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language");
     if (savedLanguage) {
@@ -38,21 +42,12 @@ const Header = ({ language, setLanguage }) => {
     localStorage.setItem("language", lang);
   };
 
-  const storedUserId = localStorage.getItem("userid");
-  const isLoggedIn = storedUserId !== null && storedUserId !== "null";
-  let id = "";
-  let role = localStorage.getItem("role");
-
-  try {
-    id = JSON.parse(storedUserId)?._id || "";
-  } catch (error) {
-    console.error("Error parsing userid:", error);
-  }
+  const isLoggedIn = user !== null;
+  const id = user?._id || "";
+  const role = user?.role || "";
 
   const handleLogout = () => {
-    localStorage.removeItem("userid");
-    localStorage.removeItem("token");
-    localStorage.removeItem("role")
+    logout();
     window.location.reload();
   };
 
@@ -70,7 +65,6 @@ const Header = ({ language, setLanguage }) => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul
             className="navbar-nav ms-auto gap-5"
@@ -80,6 +74,7 @@ const Header = ({ language, setLanguage }) => {
               fontSize: 19,
             }}
           >
+            <p className=" nav-item nav-link mt-1">Welcome {users && users.name}</p>{" "}
             {role === "admin" && (
               <li className="nav-item">
                 <Link className="nav-link" to="/">
@@ -87,7 +82,6 @@ const Header = ({ language, setLanguage }) => {
                 </Link>
               </li>
             )}
-
             <li className="nav-item">
               <Link className="nav-link" to="/">
                 {texts[language].home}
@@ -103,7 +97,6 @@ const Header = ({ language, setLanguage }) => {
                 {texts[language].entry}
               </Link>
             </li>
-
             {isLoggedIn ? (
               <li className="nav-item">
                 <button className="nav-link" onClick={handleLogout}>
@@ -124,7 +117,6 @@ const Header = ({ language, setLanguage }) => {
                 </li>
               </>
             )}
-
             <li className="nav-item dropdown">
               <button
                 className="btn btn-light dropdown-toggle"
