@@ -15,7 +15,7 @@ const authMiddleware = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const { id } = req.params; 
-
+    
     if (String(id) !== String(decoded.id)) {
       return res.status(403).json({
         success: false,

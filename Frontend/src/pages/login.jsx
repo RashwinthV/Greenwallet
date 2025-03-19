@@ -18,10 +18,12 @@ function Login({ language }) {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URI}/login`,
         { email, password },
-        { withCredentials: true } // ✅ Ensure cookies are sent and stored
+        { withCredentials: true } 
       );
 
-      const user = res.data.user; // ✅ Get user details from response
+      const user = res.data.user; 
+      localStorage.setItem("user",JSON.stringify(user))
+      localStorage.setItem("token",res.data.token)
 
       if (res.status === 200) {
         login(user); // ✅ Call login function with user data

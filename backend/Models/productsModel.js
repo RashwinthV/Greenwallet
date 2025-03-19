@@ -7,6 +7,7 @@ const productSchema = new mongoose.Schema(
       required: [true, "Product name is required"],
       trim: true,
     },
+    category: { type: String, required: true,enum:["consumable","fertlizer","pesticide"] },
     type: {
       type: String,
       required: [true, "Product type is required"],
@@ -30,6 +31,6 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const product = mongoose.model("product", productSchema, "product");
+const product = mongoose.model("product", productSchema,"product");
 
 module.exports = product;

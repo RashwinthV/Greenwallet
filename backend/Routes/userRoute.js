@@ -1,13 +1,14 @@
-const express=require('express')
-const { register } = require('../Controller/userController')
-const { getproducts, addRecord } = require('../Controller/productConroller')
-const authMiddleware = require('../middleware/Authorize')
-const userroute=express.Router()
+const express = require("express");
+const { register } = require("../Controller/userController");
+const { getProducts, addRecord } = require("../Controller/productConroller");
+const authMiddleware = require("../middleware/Authorize");
+const { getRecords } = require("../Controller/historyController");
 
+const userRoute = express.Router();
 
-userroute.post('/register',register)
-userroute.get('/products/:id',authMiddleware,getproducts)
-userroute.post('/records/:id',authMiddleware,addRecord)
+userRoute.post("/register", register);
+userRoute.get("/products/:id/:category",authMiddleware, getProducts);
+userRoute.post("/record/:id", authMiddleware, addRecord);
+userRoute.get("/records/:id",authMiddleware, getRecords); 
 
-
-module.exports=userroute
+module.exports = userRoute;
