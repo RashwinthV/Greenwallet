@@ -1,0 +1,39 @@
+.sidebar {
+  background-color: white;
+  width: 250px;
+  transition: width 0.3s ease-in-out;
+  border-right: 1px solid #ddd;
+}
+
+.sidebar.closed {
+  width: 60px;
+}
+
+/* Navigation Links */
+.nav-link {
+  color: rgb(0, 0, 0) !important;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hover effect */
+.nav-link:hover {
+  background-color: red !important;
+  color: white !important;
+}
+
+/* Active link */
+.nav-link.active {
+  background-color: red !important;
+  color: white !important;
+}
+
+/* Adjust layout when collapsed */
+.sidebar .nav-link .me-2 {
+  font-size: 1.2rem;
+}
+

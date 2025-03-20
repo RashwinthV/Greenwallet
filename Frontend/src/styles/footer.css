@@ -1,0 +1,9 @@
+.footer {
+    position: relative; /* Ensures z-index applies */
+    z-index: 1000; /* Ensure it's high enough */
+    background-color: #343a40; /* Dark background */
+    color: white;
+    padding: 20px 0;
+    width: 100%;
+  }
+  

@@ -3,6 +3,7 @@ require("dotenv").config();
 const cors = require("cors");
 const connectDB = require("./Database/db");
 const userRoute = require("./Routes/userRoute");
+const adminroute=require('./Routes/adminRoute')
 const { Login, cokieesave } = require("./Controller/loginController");
 const cookieParser = require("cookie-parser");
 
@@ -12,23 +13,19 @@ app.use(cookieParser());
 
 connectDB();
 
-
-app.use(cors());
-
+const corsOptions = {
+  origin: ["http://localhost:5173", "https://greenwallet-frontend.onrender.com","http://localhost:5174"],
+  credentials: true,
+};
+app.use(cors(corsOptions));
+app.use("/api",adminroute)
 app.use("/user", userRoute);
 app.post("/login", Login);
 app.get("/me", cokieesave);
 
-// app.post("/logout", (req, res) => {
-//   res.clearCookie("token", {
-//     httpOnly: true,
-//     secure: true,
-//     sameSite: "None",
-//   });
-//   res.json({ message: "Logged out successfully" });
-// });
-
+ 
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`🚀 Server is running on port ${port}`);
 });
+ 

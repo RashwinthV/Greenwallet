@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import '../styles/Header.css'
 
 const Header = ({ language, setLanguage }) => {
   const texts = {
@@ -55,7 +56,7 @@ const Header = ({ language, setLanguage }) => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav id="Header" className=" navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
         <Link className="navbar-brand fw-bold fs-3" to="/">
           Green Wallet
@@ -82,7 +83,7 @@ const Header = ({ language, setLanguage }) => {
             </p>
             {role === "admin" && (
               <li className="nav-item">
-                <Link className="nav-link" to="/">
+                <Link className="nav-link" to="/Admin">
                   {texts[language].admin}
                 </Link>
               </li>

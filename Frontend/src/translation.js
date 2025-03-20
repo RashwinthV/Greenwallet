@@ -21,7 +21,7 @@ const translations = {
     login: "Log In",
     loginSuccess: "Login successful!",
     loginFailed: "Login failed. Please check your details.",
-    
+
     profit: "Profit",
     loss: "Loss",
     filter: "Filter",
@@ -30,6 +30,7 @@ const translations = {
     month: "Month",
     year: "Year",
     all: "All",
+    none: "None",
     transactionHistory: "Transaction History",
     noTransactions: "No transactions available",
     total: "Total",
@@ -37,7 +38,22 @@ const translations = {
     expense: "Expense",
     description: "Description",
     date: "Date",
-    
+
+    // **Months**
+    allMonths: "All Months",
+    january: "January",
+    february: "February",
+    march: "March",
+    april: "April",
+    may: "May",
+    june: "June",
+    july: "July",
+    august: "August",
+    september: "September",
+    october: "October",
+    november: "November",
+    december: "December",
+
     // **Entry Component Translations**
     addRecord: "Add Record",
     type: "Type",
@@ -47,8 +63,15 @@ const translations = {
     userIdMissing: "User ID is missing!",
     recordAdded: "Record added successfully!",
     recordFailed: "Failed to add record.",
-    fetchError: "Failed to load products."
+    fetchError: "Failed to load products.",
+
+    // **New Translations**
+    selectCategory: "Select a Category",
+    consumable: "Consumable",
+    fertilizer: "Fertilizer",
+    pesticides: "Pesticides",
   },
+
   ta: {
     register: "பதிவு செய்யவும்",
     name: "பெயர்",
@@ -80,6 +103,7 @@ const translations = {
     month: "மாதம்",
     year: "ஆண்டு",
     all: "அனைத்து",
+    none: "எதுவுமில்லை",
     transactionHistory: "பரிவர்த்தனை வரலாறு",
     noTransactions: "பரிவர்த்தனைகள் இல்லை",
     total: "மொத்தம்",
@@ -87,7 +111,22 @@ const translations = {
     expense: "செலவு",
     description: "விளக்கம்",
     date: "தேதி",
-    
+
+    // **Months**
+    allMonths: "அனைத்து மாதங்களும்",
+    january: "ஜனவரி",
+    february: "பிப்ரவரி",
+    march: "மார்ச்",
+    april: "ஏப்ரல்",
+    may: "மே",
+    june: "ஜூன்",
+    july: "ஜூலை",
+    august: "ஆகஸ்ட்",
+    september: "செப்டம்பர்",
+    october: "அக்டோபர்",
+    november: "நவம்பர்",
+    december: "டிசம்பர்",
+
     // **Entry Component Translations**
     addRecord: "பதிவு சேர்க்கவும்",
     type: "வகை",
@@ -97,8 +136,14 @@ const translations = {
     userIdMissing: "பயனர் ஐடி இல்லை!",
     recordAdded: "பதிவு வெற்றிகரமாக சேர்க்கப்பட்டது!",
     recordFailed: "பதிவு சேர்ப்பதில் தோல்வி.",
-    fetchError: "தயாரிப்புகளை ஏற்ற முடியவில்லை."
-  }
+    fetchError: "தயாரிப்புகளை ஏற்ற முடியவில்லை.",
+
+    // **New Translations**
+    selectCategory: "ஒரு வகையை தேர்வு செய்யவும்",
+    consumable: "நுகர்ப்பொருள்",
+    fertilizer: "உரம்",
+    pesticides: "பூச்சிக்கொல்லி",
+  },
 };
 
 export default translations;

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is imported
-
+import '../styles/footer.css'
 const Footer = ({ language }) => {
   const texts = {
     en: {
@@ -23,7 +23,7 @@ const Footer = ({ language }) => {
   };
 
   return (
-    <footer className="footer bg-dark text-light py-4">
+    <footer className="footer bg-dark text-light py-4" >
       <div className="container text-center">
         <div className="row align-items-center">
           {/* Copyright Section */}
@@ -39,22 +39,34 @@ const Footer = ({ language }) => {
             <h5 className="text-uppercase fw-bold">{texts[language].about}</h5>
             <ul className="list-unstyled d-flex justify-content-end gap-3">
               <li>
-                <Link className="footer-link text-light text-decoration-none" to="/about">
+                <Link
+                  className="footer-link text-light text-decoration-none"
+                  to="/about"
+                >
                   {texts[language].about}
                 </Link>
               </li>
               <li>
-                <Link className="footer-link text-light text-decoration-none" to="/contact">
+                <Link
+                  className="footer-link text-light text-decoration-none"
+                  to="/contact"
+                >
                   {texts[language].contact}
                 </Link>
               </li>
               <li>
-                <Link className="footer-link text-light text-decoration-none" to="/privacy">
+                <Link
+                  className="footer-link text-light text-decoration-none"
+                  to="/privacy"
+                >
                   {texts[language].privacy}
                 </Link>
               </li>
               <li>
-                <Link className="footer-link text-light text-decoration-none" to="/terms">
+                <Link
+                  className="footer-link text-light text-decoration-none"
+                  to="/terms"
+                >
                   {texts[language].terms}
                 </Link>
               </li>

@@ -128,18 +128,7 @@ const Entry = ({ language, id }) => {
         </div>
 
         <div className="row mb-3">
-          {/* <div className="col">
-            <label className="form-label">
-              {translations[language]?.amount || "Amount"}
-            </label>
-            <input
-              type="number"
-              className="form-control"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              required
-            />
-          </div> */}
+        
           <div className="col">
             <label className="form-label">Rate</label>
             <input
@@ -180,7 +169,7 @@ const Entry = ({ language, id }) => {
 
         {/* Category Selection */}
         <div className="mb-3">
-          <label className="form-label">Select Product Category</label>
+          <label className="form-label">{translations[language].selectCategory}</label>
           <div className="d-flex justify-content-between">
             {["consumable", "fertilizer", "pesticide"].map((cat) => (
               <button
@@ -190,7 +179,7 @@ const Entry = ({ language, id }) => {
                 } w-100 mx-1`}
                 onClick={() => {
                   setCategory(cat);
-                  setProductId(""); // Reset product selection
+                  setProductId(""); 
                   setSelectedProduct(null);
                   setProductType(cat === "consumable" ? "" : null);
                 }}
@@ -232,6 +221,8 @@ const Entry = ({ language, id }) => {
                   translations[language]?.selectProduct || "Select Product"
                 )}
               </button>
+
+              {/*dropdawn for consumable */}
               <ul className="dropdown-menu w-100">
                 {products
                   .filter((product) => product.category === category)

@@ -1,0 +1,40 @@
+.chart-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: auto;
+  }
+  
+  .chart-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  /* Reduce margins for small screens */
+  @media (max-width: 768px) {
+   
+    .row {
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
+  
+    #con {
+      padding: 5px; 
+      width: 250px;
+      margin-bottom: 10px; 
+    }
+  
+    .chart-container {
+      width: 120px;
+      height: 120px;
+    }
+  
+    .chart-label {
+      font-size: 1.1rem;
+    }
+  }
+  

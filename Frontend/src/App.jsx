@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,11 +10,12 @@ import Entry from "./pages/Entry";
 import Login from "./pages/login";
 import Register from "./pages/register";
 
-function App() { 
+function App() {
   const [language, setLanguage] = useState("en");
   const [id, setId] = useState(null);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation(); // ✅ Fix: Define location correctly
 
   useEffect(() => {
     let storedUser = localStorage.getItem("user");
@@ -23,24 +24,40 @@ function App() {
       setId(userObject._id);
     }
     setLoading(false);
-  }, [navigate]); 
+  }, [navigate]);
+
+  const isAdminRoute = location.pathname.startsWith("/Admin"); // ✅ Fix: Now works correctly
+
+  // ✅ Open Admin Panel in a New Tab
+  useEffect(() => {
+    if (isAdminRoute) {
+      window.open(" http://localhost:5174/", "_blank");
+      navigate("/"); 
+    }
+  }, [isAdminRoute, navigate]);
 
   if (loading) return <div>Loading...</div>;
 
   return (
     <>
-      <Header language={language} setLanguage={setLanguage} id={id} />
+      {!isAdminRoute && <Header language={language} setLanguage={setLanguage} id={id} />}
       <ToastContainer />
-
       <Routes>
         <Route path="/" element={<Body language={language} />} />
-        <Route path="/records" element={id ? <Records language={language} id={id} /> : <Navigate to="/login" />} />
-        <Route path="/entry" element={id ? <Entry language={language} id={id} /> : <Navigate to="/login" />} />
+        <Route
+          path="/records"
+          element={id ? <Records language={language} id={id} /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/entry"
+          element={id ? <Entry language={language} id={id} /> : <Navigate to="/login" />}
+        />
         <Route path="/login" element={<Login language={language} />} />
         <Route path="/register" element={<Register language={language} />} />
+        
+        {/* ✅ No Need for an Admin Route (Handled in useEffect) */}
       </Routes>
-
-      <Footer language={language} />
+      {!isAdminRoute && <Footer language={language} />}
     </>
   );
 }
