@@ -10,18 +10,24 @@ exports.getRecords = async (req, res) => {
       return res.status(400).json({ error: "Invalid User ID format" });
     }
 
-    const userRecords = await Record.findOne({ userId: new mongoose.Types.ObjectId(userId) })
-      .populate("records.productId", "name type category price");
+    const userRecords = await Record.findOne({
+      userId: new mongoose.Types.ObjectId(userId),
+    }).populate("records.productId", "name type category price");
 
     if (!userRecords || userRecords.records.length === 0) {
-      return res.status(404).json({ success: false, message: "No records found for this user." });
+      return res
+        .status(404)
+        .json({ success: false, message: "No records found for this user." });
     }
 
     const formattedRecords = await Promise.all(
       userRecords.records.map(async (record) => {
         let productDetails = record.productId;
+
         if (!productDetails || !productDetails.name) {
-          productDetails = await Product.findById(record.productId).select("name type category price");
+          productDetails = await Product.findById(record.productId).select(
+            "name type category price"
+          );
         }
 
         return {
@@ -31,7 +37,9 @@ exports.getRecords = async (req, res) => {
           kgs: record.kgs,
           amount: record.amount,
           type: record.type,
-          product: productDetails?.name || null
+          productId: productDetails?._id || null,
+          productName: productDetails?.name || "Unknown",
+          productCategory: productDetails?.category || "Unknown",
         };
       })
     );
