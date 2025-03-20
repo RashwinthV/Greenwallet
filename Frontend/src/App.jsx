@@ -31,7 +31,7 @@ function App() {
   // ✅ Open Admin Panel in a New Tab
   useEffect(() => {
     if (isAdminRoute) {
-      window.open(" http://localhost:5174/", "_blank");
+      window.open(`${import.meta.env.VITE_ADMIN_URI}`, "_blank");
       navigate("/"); 
     }
   }, [isAdminRoute, navigate]);
