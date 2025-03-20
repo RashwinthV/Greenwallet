@@ -63,10 +63,11 @@ const Entry = ({ language, id }) => {
       toast.error("Please select a product before submitting!");
       return;
     }
+    const calculatedAmount = rate * kgs;
 
     const newRecord = {
       date,
-      amount,
+      amount: calculatedAmount, 
       rate,
       kgs,
       type,
@@ -75,7 +76,6 @@ const Entry = ({ language, id }) => {
       productType,
       userId,
     };
-
     try {
       await axios.post(
         `${import.meta.env.VITE_BACKEND_URI}/user/record/${userId}`,
@@ -128,7 +128,7 @@ const Entry = ({ language, id }) => {
         </div>
 
         <div className="row mb-3">
-          <div className="col">
+          {/* <div className="col">
             <label className="form-label">
               {translations[language]?.amount || "Amount"}
             </label>
@@ -139,7 +139,7 @@ const Entry = ({ language, id }) => {
               onChange={(e) => setAmount(e.target.value)}
               required
             />
-          </div>
+          </div> */}
           <div className="col">
             <label className="form-label">Rate</label>
             <input

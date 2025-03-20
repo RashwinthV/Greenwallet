@@ -1,4 +1,7 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Body from "./pages/Body";
@@ -6,38 +9,27 @@ import Records from "./pages/Records";
 import Entry from "./pages/Entry";
 import Login from "./pages/login";
 import Register from "./pages/register";
-import { useContext, useState, useEffect } from "react";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import AuthContext from "./context/Authcontextt";
 
 function App() { 
   const [language, setLanguage] = useState("en");
-  const { user } = useContext(AuthContext);
-  const [id, setId] = useState(null); // Use state to prevent early redirects
+  const [id, setId] = useState(null);
+  const [loading, setLoading] = useState(true); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     let storedUser = localStorage.getItem("user");
     if (storedUser) {
       let userObject = JSON.parse(storedUser);
-      setId(userObject._id); // Store the ID in state
+      setId(userObject._id);
     }
-  }, []); // Runs once when the component mounts
+    setLoading(false);
+  }, [navigate]); 
 
-  useEffect(() => {
-    if (user) {
-      setId(user._id || user.id); // If AuthContext updates, set the ID
-    }
-  }, [user]);
-
-  // While checking auth, show a loading screen to avoid immediate redirects
-  if (id === null) {
-    return <div>Loading...</div>; // Temporary loading screen
-  }
+  if (loading) return <div>Loading...</div>;
 
   return (
     <>
-      <Header language={language} setLanguage={setLanguage} />
+      <Header language={language} setLanguage={setLanguage} id={id} />
       <ToastContainer />
 
       <Routes>

@@ -4,16 +4,19 @@ import { Doughnut } from "react-chartjs-2";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import AuthContext from "../context/Authcontextt"; // ✅ Fixed import
+// import AuthContext from "../context/Authcontextt"; // ✅ Fixed import
 import translations from "../translation"; 
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Dashboard = ({ language }) => {
-  const { user } = useContext(AuthContext);
+  // const { user } = useContext(AuthContext);
   const [transactions, setTransactions] = useState([]);
   const [filter, setFilter] = useState("today");
-
+  const storedUser = localStorage.getItem("user");
+  const user = storedUser ? JSON.parse(storedUser) : null;
+  
+  // Extract user ID safely
   const userId = user?._id || "";
 
   useEffect(() => {
@@ -28,10 +31,10 @@ const Dashboard = ({ language }) => {
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
           }
         );
-        setTransactions(res.data.records || []); // ✅ Ensure it's an array
+        setTransactions(res.data.records || []);
       } catch (error) {
         console.error("❌ Error fetching transactions:", error.response?.data || error);
-        setTransactions([]); // ✅ Prevent crashes by setting an empty array
+        setTransactions([]); 
       }
     };
 

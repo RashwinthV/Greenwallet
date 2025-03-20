@@ -3,14 +3,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import translations from "../translation";
-import AuthContext from "../context/Authcontextt";
+// import AuthContext from "../context/Authcontextt";
 
 function Login({ language }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext); // Get login function from AuthContext
+  // const { login } = useContext(AuthContext); // Get login function from AuthContext
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -26,7 +26,7 @@ function Login({ language }) {
       localStorage.setItem("token",res.data.token)
 
       if (res.status === 200) {
-        login(user); // ✅ Call login function with user data
+        // login(user); // ✅ Call login function with user data
         toast.success(translations[language].loginSuccess);
         navigate("/");
       }

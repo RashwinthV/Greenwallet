@@ -22,11 +22,11 @@ exports.Login = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "30d",
     });
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true, 
-      sameSite: "None",
-    });
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   secure: true, 
+    //   sameSite: "None",
+    // });
 
     return res.status(200).json({ message: "Login successful", token, user });
   } catch (error) {

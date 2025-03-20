@@ -1,7 +1,6 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import AuthContext from "../context/Authcontextt";
 
 const Header = ({ language, setLanguage }) => {
   const texts = {
@@ -27,8 +26,13 @@ const Header = ({ language, setLanguage }) => {
     },
   };
 
-  const { user, logout } = useContext(AuthContext);
-  let users = user || " ";
+  // Get user from localStorage safely
+  const storedUser = localStorage.getItem("user");
+  const user = storedUser ? JSON.parse(storedUser) : null;
+  
+  // Extract user ID safely
+  const userId = user?._id || "";
+  const role = user?.role || "";
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language");
@@ -43,11 +47,10 @@ const Header = ({ language, setLanguage }) => {
   };
 
   const isLoggedIn = user !== null;
-  const id = user?._id || "";
-  const role = user?.role || "";
 
   const handleLogout = () => {
-    logout();
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
     window.location.reload();
   };
 
@@ -74,7 +77,9 @@ const Header = ({ language, setLanguage }) => {
               fontSize: 19,
             }}
           >
-            <p className=" nav-item nav-link mt-1">Welcome {users && users.name}</p>{" "}
+            <p className="nav-item nav-link mt-1">
+              Welcome {user ? user.name : "Guest"}
+            </p>
             {role === "admin" && (
               <li className="nav-item">
                 <Link className="nav-link" to="/">
@@ -105,11 +110,6 @@ const Header = ({ language, setLanguage }) => {
               </li>
             ) : (
               <>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/register">
-                    {texts[language].signup}
-                  </Link>
-                </li>
                 <li className="nav-item">
                   <Link className="nav-link" to="/login">
                     {texts[language].login}

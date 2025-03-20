@@ -16,6 +16,7 @@ const recordSchema = new mongoose.Schema(
         amount: {
           type: Number,
           required: true,
+          default:0
         },
         type: {
           type: String,
@@ -31,11 +32,13 @@ const recordSchema = new mongoose.Schema(
           type: Number,
           required: true,
           min: [0, "Rate must be positive"],
+          default:0
         },
         kgs: {
           type: Number,
           required: true,
           min: [0, "Quantity must be positive"],
+          default:0
         },
       },
     ],
