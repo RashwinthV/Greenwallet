@@ -2,8 +2,8 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home"; // Home is the layout
 import Dashboard from "./pages/Dashboard";
-import Products from "./pages/Products";
-import Users from "./pages/Users";
+import Products from "./pages/products";
+import Users from "./pages/users";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Profile from "./pages/Profile";
 import'./app.css'
