@@ -14,7 +14,7 @@ app.use(cookieParser());
 connectDB();
 
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://greenwallet-frontend.onrender.com","http://localhost:5174"],
+  origin: ["http://localhost:5173", "https://greenwallet-frontend.onrender.com","http://localhost:5174","https://greenwallet-admin.onrender.com"],
   credentials: true,
 };
 app.use(cors(corsOptions));
