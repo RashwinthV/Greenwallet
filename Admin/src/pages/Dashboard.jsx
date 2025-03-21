@@ -27,12 +27,12 @@ function Dashboard() {
     labels: [label],
     datasets: [
       {
-        data: [75, 20], // 85% filled to shape like "n", 15% empty
+        data: [90, 30], // Adjusted for better visibility
         backgroundColor: [color, "#FFFFFF"],
         hoverBackgroundColor: ["#EDEDED", color],
         borderWidth: 0,
         cutout: "80%",
-        spacing: 5,
+        spacing: 6,
         borderRadius: 20,
       },
     ],
@@ -46,7 +46,7 @@ function Dashboard() {
         backgroundColor: colors,
         hoverBackgroundColor: colors.map((color) => color + "CC"),
         borderWidth: 2,
-        cutout: "60%", // Increased for a more appealing look
+        cutout: "60%",
       },
     ],
   });
@@ -64,17 +64,16 @@ function Dashboard() {
         ].map((item, index) => (
           <div
             key={index}
-            id="con"
-            className="col-lg-4 col-md-6 col-sm-12 mb-4"
+            className="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex justify-content-center"
           >
-            <div className="card shadow-sm p-3">
+            <div className="card shadow-sm p-3 w-100">
               <h5>{item.label}</h5>
               <div className="chart-container">
                 <Doughnut
                   data={getChartData(item.label, item.count, item.color)}
                   options={{
                     maintainAspectRatio: false,
-                    rotation: 220, // Adjust for "n" shape
+                    rotation: 220,
                     plugins: {
                       tooltip: { enabled: false },
                       legend: { display: false },
@@ -90,9 +89,9 @@ function Dashboard() {
 
       {/* Product Categories Section */}
       <h4 className="mt-5 text-center">Products by Category</h4>
-      <div className="d-flex justify-content-center align-items-center gap-5 flex-wrap mt-3">
+      <div className="d-flex flex-column flex-lg-row justify-content-center align-items-center gap-4 flex-wrap mt-3">
         {/* Product Categories Donut Chart */}
-        <div style={{ width: "450px" }}>
+        <div className="category-chart">
           <Doughnut
             data={getNormalChartData(
               Object.keys(stats.productCategories),
