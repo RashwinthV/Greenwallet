@@ -1,53 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import '../styles/Header.css'
+import "../styles/Header.css";
 
 const Header = ({ language, setLanguage }) => {
+  const [isNavbarOpen, setIsNavbarOpen] = useState(false);
+
   const texts = {
-    en: {
-      admin: "Admin Panel",
-      home: "Home",
-      records: "Records",
-      entry: "Entry",
-      signup: "Sign Up",
-      login: "Login",
-      logout: "Logout",
-      language: "Language",
-    },
-    ta: {
-      admin: "நிர்வாக குழு",
-      home: "முகப்பு",
-      records: "பதிவுகள்",
-      entry: "நுழைவு",
-      signup: "பதிவு செய்யவும்",
-      login: "உள்நுழைவு",
-      logout: "வெளியேறுதல்",
-      language: "மொழி",
-    },
+    en: { admin: "Admin Panel", home: "Home", records: "Records", entry: "Entry", signup: "Sign Up", login: "Login", logout: "Logout", language: "Language" },
+    ta: { admin: "நிர்வாக குழு", home: "முகப்பு", records: "பதிவுகள்", entry: "நுழைவு", signup: "பதிவு செய்யவும்", login: "உள்நுழைவு", logout: "வெளியேறுதல்", language: "மொழி" },
   };
 
-  // Get user from localStorage safely
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
-  
-  // Extract user ID safely
-  const userId = user?._id || "";
   const role = user?.role || "";
+  const isLoggedIn = user !== null;
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language");
-    if (savedLanguage) {
-      setLanguage(savedLanguage);
-    }
+    if (savedLanguage) setLanguage(savedLanguage);
   }, [setLanguage]);
 
   const handleLanguageChange = (lang) => {
     setLanguage(lang);
     localStorage.setItem("language", lang);
+    setIsNavbarOpen(false); // Close navbar after language selection
   };
-
-  const isLoggedIn = user !== null;
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -55,8 +33,14 @@ const Header = ({ language, setLanguage }) => {
     window.location.reload();
   };
 
+  // Function to close the navbar after clicking a link
+  const closeNavbar = () => {
+    setIsNavbarOpen(false);
+    document.getElementById("navbarNav").classList.remove("show"); // Hide Bootstrap collapse
+  };
+
   return (
-    <nav id="Header" className=" navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav id="Header" className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
         <Link className="navbar-brand fw-bold fs-3" to="/">
           Green Wallet
@@ -64,42 +48,39 @@ const Header = ({ language, setLanguage }) => {
         <button
           className="navbar-toggler"
           type="button"
+          onClick={() => setIsNavbarOpen(!isNavbarOpen)}
           data-bs-toggle="collapse"
           data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded={isNavbarOpen}
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul
-            className="navbar-nav ms-auto gap-5"
-            style={{
-              fontFamily: "Exo 2, sans-serif",
-              fontWeight: 400,
-              fontSize: 19,
-            }}
-          >
+        
+        <div className={`collapse navbar-collapse ${isNavbarOpen ? "show" : ""}`} id="navbarNav">
+          <ul className="navbar-nav ms-auto gap-3">
             <p className="nav-item nav-link mt-1">
               Welcome {user ? user.name : "Guest"}
             </p>
             {role === "admin" && (
               <li className="nav-item">
-                <Link className="nav-link" to="/Admin">
+                <Link className="nav-link" to="/Admin" onClick={closeNavbar}>
                   {texts[language].admin}
                 </Link>
               </li>
             )}
             <li className="nav-item">
-              <Link className="nav-link" to="/">
+              <Link className="nav-link" to="/" onClick={closeNavbar}>
                 {texts[language].home}
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/records">
+              <Link className="nav-link" to="/records" onClick={closeNavbar}>
                 {texts[language].records}
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to={`/entry`}>
+              <Link className="nav-link" to="/entry" onClick={closeNavbar}>
                 {texts[language].entry}
               </Link>
             </li>
@@ -110,13 +91,11 @@ const Header = ({ language, setLanguage }) => {
                 </button>
               </li>
             ) : (
-              <>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/login">
-                    {texts[language].login}
-                  </Link>
-                </li>
-              </>
+              <li className="nav-item">
+                <Link className="nav-link" to="/login" onClick={closeNavbar}>
+                  {texts[language].login}
+                </Link>
+              </li>
             )}
             <li className="nav-item dropdown">
               <button
@@ -130,18 +109,12 @@ const Header = ({ language, setLanguage }) => {
               </button>
               <ul className="dropdown-menu" aria-labelledby="languageDropdown">
                 <li>
-                  <button
-                    className="dropdown-item"
-                    onClick={() => handleLanguageChange("en")}
-                  >
+                  <button className="dropdown-item" onClick={() => handleLanguageChange("en")}>
                     English
                   </button>
                 </li>
                 <li>
-                  <button
-                    className="dropdown-item"
-                    onClick={() => handleLanguageChange("ta")}
-                  >
+                  <button className="dropdown-item" onClick={() => handleLanguageChange("ta")}>
                     தமிழ்
                   </button>
                 </li>

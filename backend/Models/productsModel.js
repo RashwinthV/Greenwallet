@@ -7,11 +7,11 @@ const productSchema = new mongoose.Schema(
       required: [true, "Product name is required"],
       trim: true,
     },
-    category: { type: String, required: true,enum:["consumable","fertlizer","pesticide"] },
+    category: { type: String, required: true,enum:["consumable","fertilizer","pesticide"] },
     type: {
       type: String,
       required: [true, "Product type is required"],
-      enum: ["vegetable", "Fruit", "Coconut"],
+      enum: ["vegetable", "Fruit", "Coconut", "chemical", "organic"], // Added chemical & organic
     },
     description: {
       type: String,

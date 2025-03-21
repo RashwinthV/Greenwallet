@@ -1,0 +1,157 @@
+/* Product Grid */
+.can{
+    width: 100%; /* Or set a fixed width */
+    max-width: 1200px;
+    overflow: hidden; /* Ensures no unwanted scrolling */  
+}
+.product-list {
+  display: flex;
+  overflow-x: auto; /* Enables horizontal scrolling */
+  overflow-y: hidden; /* Prevents unnecessary vertical scroll */
+  white-space: nowrap; /* Prevents items from wrapping */
+  gap: 15px;
+  justify-content: start;
+}
+
+
+/* Individual Product Card */
+.product-card {
+  width: 200px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  box-shadow: 0px 2px 8px rgba(16, 15, 15, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative; /* Needed for absolute positioning of delete button */
+}
+
+.product-card:hover {
+  transform: scale(1.05);
+}
+
+/* Delete Button */
+.delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.delete-btn:hover {
+  background: darkred;
+}
+
+/* Image */
+.card-img-top {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+/* Modal Styling */
+.product-details-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.product-details-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.modal-img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .product-list {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+/* Delete Button */
+.delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.delete-btn:hover {
+  background: darkred;
+}
+
+/* Delete Confirmation Modal */
+.delete-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.delete-confirm-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 350px;
+  width: 90%;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.delete-confirm-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 15px;
+}

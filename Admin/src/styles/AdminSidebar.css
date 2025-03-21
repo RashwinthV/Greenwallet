@@ -6,7 +6,7 @@
 }
 
 .sidebar.closed {
-  width: 60px;
+  width: 70px;
 }
 
 /* Navigation Links */
@@ -18,6 +18,10 @@
   text-decoration: none;
   border-radius: 5px;
   transition: background-color 0.3s, color 0.3s;
+}
+.dropdown-item:hover {
+  background-color: red !important;  /* Changes background to red */
+  color: white !important;  /* Changes text color to white */
 }
 
 /* Hover effect */

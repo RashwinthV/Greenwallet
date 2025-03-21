@@ -50,3 +50,81 @@ exports.getRecords = async (req, res) => {
     res.status(500).json({ error: "Error fetching transactions" });
   }
 };
+
+exports.Record = async (req, res) => {
+  try {
+    const records = await Record.findOne({ userId: req.params.id }).populate(
+      "records.productId"
+    );
+    if (!records) return res.status(404).json({ message: "No records found" });
+
+    res.json(records);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.UpdateRecord = async (req, res) => {
+  console.log(req.params);
+try {
+    const { id, recordId } = req.params;
+    const updatedData = req.body; 
+    console.log(req.body);
+    
+    // Find and update the specific record inside the records array
+    const updatedRecord = await Record.findOneAndUpdate(
+      { userId:id, "records._id": recordId }, // Match user and record inside array
+      {
+        $set: {
+          "records.$.date": updatedData.date,
+          "records.$.amount": updatedData.amount,
+          "records.$.type": updatedData.type,
+          "records.$.productId": updatedData.productId,
+          "records.$.rate": updatedData.rate,
+          "records.$.kgs": updatedData.kgs,
+        },
+      },
+      { new: true } // Returns the updated document
+    ).populate("records.productId");
+
+    if (!updatedRecord) {
+      return res.status(404).json({ error: "Record not found" });
+    }
+
+    // Return updated records
+    res.json({ message: "Record updated", records: updatedRecord.records });
+  } catch (err) {
+    console.error("Error updating record:", err);
+    res.status(500).json({ error: "Server error while updating record" });
+  }
+};
+
+exports.Deleterecord = async (req, res) => {
+  try {
+    const { id, recordId } = req.params;
+    console.log("Deleting record:", req.params);
+
+    // ✅ Find the user record
+    const userRecord = await Record.findOne({ userId: id });
+
+    if (!userRecord) {
+      return res.status(404).json({ error: "User record not found" });
+    }
+
+    // ✅ Remove the specific record from the `records` array
+    const updatedRecord = await Record.findOneAndUpdate(
+      { userId: id },
+      { $pull: { records: { _id: recordId } } }, // ✅ Removes matching record
+      { new: true }
+    ).populate("records.productId");
+
+    if (!updatedRecord) {
+      return res.status(404).json({ error: "Record not found" });
+    }
+
+    res.json({ message: "Record deleted", records: updatedRecord.records });
+  } catch (err) {
+    console.error("Error deleting record:", err);
+    res.status(500).json({ error: "Server error while deleting record" });
+  }
+};

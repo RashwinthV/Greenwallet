@@ -1,0 +1,22 @@
+/* ✅ Table stays responsive on mobile */
+.table-responsive {
+    max-width: 1000px;
+    overflow-x: auto; 
+     /* Enables horizontal scrolling */
+    max-height: 700px;
+    overflow-y: auto;
+     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  }
+  
+  /* ✅ Prevents table columns from squishing */
+  .min-width-table {
+    min-width: 700px; /* Adjust width to fit content */
+    white-space: nowrap; /* Prevents text from wrapping */
+  }
+  @media(max-width:700px){
+    .table-responsive {
+        max-width: 300px;
+        overflow-x: auto;  /* Enables horizontal scrolling */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+      }
+  }

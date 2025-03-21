@@ -2,17 +2,18 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import translations from "../translation"; // Import translations
+import translations from "../translation"; 
+import '../styles/enrty.css'
 
 const Entry = ({ language, id }) => {
   const userId = id;
   const [date, setDate] = useState("");
   const [amount, setAmount] = useState("");
-  const [rate, setRate] = useState(""); // Added Rate field
-  const [kgs, setKgs] = useState(""); // Added Kgs field
+  const [rate, setRate] = useState(""); 
+  const [kgs, setKgs] = useState(""); 
   const [type, setType] = useState("expense");
-  const [category, setCategory] = useState(""); // Selected category
-  const [productType, setProductType] = useState(""); // Only for consumables
+  const [category, setCategory] = useState(""); 
+  const [productType, setProductType] = useState("");
 
   const [productId, setProductId] = useState("");
   const [products, setProducts] = useState([]);
@@ -191,65 +192,67 @@ const Entry = ({ language, id }) => {
           </div>
         </div>
 
-        {/* Product Dropdown */}
-        {category && (
-          <div className="mb-3">
-            <label className="form-label">
-              {translations[language]?.product || "Product"}
-            </label>
-            <div className="dropdown">
-              <button
-                className="btn btn-outline-secondary dropdown-toggle w-100"
-                type="button"
-                data-bs-toggle="dropdown"
-              >
-                {selectedProduct ? (
-                  <>
-                    <img
-                      src={selectedProduct.image}
-                      alt={selectedProduct.name}
-                      style={{
-                        width: 30,
-                        height: 30,
-                        marginRight: 8,
-                        borderRadius: "50%",
-                      }}
-                    />
-                    {selectedProduct.name}
-                  </>
-                ) : (
-                  translations[language]?.selectProduct || "Select Product"
-                )}
-              </button>
-
-              {/*dropdawn for consumable */}
-              <ul className="dropdown-menu w-100">
-                {products
-                  .filter((product) => product.category === category)
-                  .map((product) => (
-                    <li key={product._id}>
-                      <button
-                        className="dropdown-item d-flex align-items-center"
-                        onClick={() => handleSelect(product)}
-                      >
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          style={{
-                            width: 30,
-                            height: 30,
-                            marginRight: 10,
-                            borderRadius: "50%",
-                          }}
-                        />
-                        {product.name}
-                      </button>
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          </div>
+      {/* Product Dropdown */}
+      
+{category && (
+  <div className="mb-3">
+    <label className="form-label">
+      {translations[language]?.product || "Product"}
+    </label>
+    <div className="dropdown">
+      <button
+        className="btn btn-outline-secondary dropdown-toggle w-100"
+        type="button"
+        data-bs-toggle="dropdown"
+      >
+        {selectedProduct ? (
+          <>
+            <img
+              src={selectedProduct.image}
+              alt={selectedProduct.name}
+              style={{
+                width: 30,
+                height: 30,
+                marginRight: 8,
+                borderRadius: "50%",
+              }}
+            />
+            {selectedProduct.name}
+          </>
+        ) : (
+          translations[language]?.selectProduct || "Select Product"
         )}
+      </button>
+
+      {/* Dropdown Menu */}
+      <ul className="dropdown-menu w-100 custom-scroll">
+        {products
+          .filter((product) => product.category === category)
+          .map((product) => (
+            <li key={product._id}>
+              <button
+                className="dropdown-item d-flex align-items-center"
+                onClick={() => handleSelect(product)}
+              >
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    marginRight: 10,
+                    borderRadius: "50%",
+                  }}
+                />
+                {product.name}
+              </button>
+            </li>
+          ))}
+      </ul>
+    </div>
+  </div>
+)}
+
         <button type="submit" className="btn btn-primary w-100">
           {translations[language]?.submit || "Submit"}
         </button>

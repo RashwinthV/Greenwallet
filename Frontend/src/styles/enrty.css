@@ -1,0 +1,4 @@
+ .custom-scroll {
+  max-height: 150px; /* Adjust height to fit ~3 products */
+  overflow-y: auto; /* Enables vertical scrolling */
+}

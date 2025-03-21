@@ -33,3 +33,13 @@ exports.register = async (req, res) => {
     res.status(500).json({ message: "Error registering user", error: error.message });
   }
 };
+
+
+exports.Alluser=async (req, res) => {
+  try {
+    const users = await User.find().select("name email");
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching users" });
+  }
+}
