@@ -65,15 +65,12 @@ exports.Record = async (req, res) => {
 };
 
 exports.UpdateRecord = async (req, res) => {
-  console.log(req.params);
 try {
     const { id, recordId } = req.params;
     const updatedData = req.body; 
-    console.log(req.body);
     
-    // Find and update the specific record inside the records array
     const updatedRecord = await Record.findOneAndUpdate(
-      { userId:id, "records._id": recordId }, // Match user and record inside array
+      { userId:id, "records._id": recordId }, 
       {
         $set: {
           "records.$.date": updatedData.date,
@@ -84,14 +81,13 @@ try {
           "records.$.kgs": updatedData.kgs,
         },
       },
-      { new: true } // Returns the updated document
+      { new: true } 
     ).populate("records.productId");
 
     if (!updatedRecord) {
       return res.status(404).json({ error: "Record not found" });
     }
 
-    // Return updated records
     res.json({ message: "Record updated", records: updatedRecord.records });
   } catch (err) {
     console.error("Error updating record:", err);
