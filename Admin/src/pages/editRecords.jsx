@@ -2,20 +2,24 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Modal, Button, Form, Table } from "react-bootstrap";
+import { Modal, Button, Form, Table, Pagination } from "react-bootstrap";
 import "../styles/editrecords.css";
 
 const EditRecords = () => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [records, setRecords] = useState([]);
-  const [products, setProducts] = useState([]); // ✅ Store products
+  const [products, setProducts] = useState([]); 
   const [editRecord, setEditRecord] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [recordToDelete, setRecordToDelete] = useState(null);
 
-  // ✅ Fetch all users
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 10; // Show 10 records per page
+
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_BACKEND_URI}/api/users`)
@@ -23,47 +27,46 @@ const EditRecords = () => {
       .catch((err) => console.error("Error fetching users:", err));
   }, []);
 
-  // ✅ Fetch all products
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_BACKEND_URI}/api/getproducts`)
       .then((res) => {
-        const groupedProducts = res.data; // Backend sends an object
+        const groupedProducts = res.data;
         const productArray = Object.entries(groupedProducts).flatMap(
           ([category, items]) =>
             items.map((product) => ({ ...product, category }))
         );
-        setProducts(productArray); // ✅ Store as an array
+        setProducts(productArray);
       })
       .catch((err) => console.error("Error fetching products:", err));
   }, []);
 
-  // ✅ Fetch records for the selected user
   useEffect(() => {
     if (selectedUser) {
       axios
-        .get(`${import.meta.env.VITE_BACKEND_URI}/api/records/${selectedUser}`)
+        .get(
+          `${import.meta.env.VITE_BACKEND_URI}/api/records/${selectedUser}?page=${page}&limit=${limit}`
+        )
         .then((res) => {
           setRecords(res.data.records || []);
-          toast.success("Records loaded successfully! ✅");
+          setTotalPages(res.data.totalPages || 1);
         })
         .catch((err) => {
           console.error("Error fetching records:", err);
           toast.error("Failed to load records. ❌");
         });
     }
-  }, [selectedUser]);
+  }, [selectedUser, page]);
   
-  // ✅ Handle Delete Confirmation
+
   const confirmDelete = (recordId) => {
     setRecordToDelete(recordId);
     setShowDeleteModal(true);
   };
 
-  // ✅ Handle Actual Deletion After Confirmation
   const handleDelete = () => {
     if (!recordToDelete) return;
-  
+
     axios
       .delete(
         `${import.meta.env.VITE_BACKEND_URI}/api/deleterecord/${selectedUser}/${recordToDelete}`
@@ -79,17 +82,15 @@ const EditRecords = () => {
         toast.error("Failed to delete record. ❌");
       });
   };
-  
-  // ✅ Handle Open Edit Modal
+
   const handleEdit = (record) => {
     setEditRecord({
       ...record,
       date: new Date(record.date).toISOString().split("T")[0],
-    }); // Format date for input
+    });
     setShowModal(true);
   };
 
-  // ✅ Handle Save Edited Record
   const handleSave = () => {
     axios
       .post(
@@ -106,18 +107,19 @@ const EditRecords = () => {
         toast.error("Failed to update record. ❌");
       });
   };
-  
 
   return (
     <div className="container mt-4">
       <h2 className="text-center">Manage Records</h2>
 
-      {/* ✅ User Dropdown */}
       <div className="mb-3">
         <label className="form-label">Select User</label>
         <Form.Select
           value={selectedUser}
-          onChange={(e) => setSelectedUser(e.target.value)}
+          onChange={(e) => {
+            setSelectedUser(e.target.value);
+            setPage(1);
+          }}
         >
           <option value="">-- Select a User --</option>
           {users.map((user) => (
@@ -128,7 +130,6 @@ const EditRecords = () => {
         </Form.Select>
       </div>
 
-      {/* ✅ Responsive Table with Scrollable Content */}
       <div className="table-responsive">
         <Table striped bordered hover className="min-width-table">
           <thead>
@@ -148,7 +149,7 @@ const EditRecords = () => {
                 <td>{new Date(record.date).toLocaleDateString()}</td>
                 <td>₹{record.amount}</td>
                 <td>{record.type}</td>
-                <td>{record.productId?.name || "N/A"}</td>
+                <td>{record.productId?.name ||record.Expense|| "N/A"}</td>
                 <td>{record.rate}</td>
                 <td>{record.kgs}</td>
                 <td>
@@ -173,8 +174,21 @@ const EditRecords = () => {
         </Table>
       </div>
 
-      {/* ✅ Edit Modal */}
-      {editRecord && (
+      {/* ✅ Pagination Controls */}
+      <Pagination className="justify-content-center">
+        <Pagination.Prev
+          onClick={() => setPage(page - 1)}
+          disabled={page === 1}
+        />
+        <Pagination.Item active>{page}</Pagination.Item>
+        <Pagination.Next
+          onClick={() => setPage(page + 1)}
+          disabled={page === totalPages}
+        />
+      </Pagination>
+
+        {/* ✅ Edit Modal */}
+        {editRecord && (
         <Modal show={showModal} onHide={() => setShowModal(false)} centered>
           <Modal.Header closeButton>
             <Modal.Title>Edit Record</Modal.Title>
@@ -273,8 +287,7 @@ const EditRecords = () => {
           </Modal.Footer>
         </Modal>
       )}
-
-      <Modal
+    <Modal
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
         centered
@@ -294,6 +307,7 @@ const EditRecords = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+    
     </div>
   );
 };

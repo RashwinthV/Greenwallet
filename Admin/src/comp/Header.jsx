@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { FaMoon, FaSun } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -18,7 +18,12 @@ const Header = ({ toggleSidebar }) => {
       className={`py-3 px-4 d-flex justify-content-between align-items-center shadow-sm 
         ${darkMode ? "bg-dark text-light" : "bg-white text-dark"}`}
     >
-      <h2 className="m-0">Admin Panel</h2>
+      <h2 className="m-0">
+      <Link className="nav" style={{textDecoration:"none" ,color:"black"}} to="/">
+
+        Admin Panel
+        </Link>
+        </h2>
 
       <div className="d-flex align-items-center">
         <button

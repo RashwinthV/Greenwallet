@@ -42,7 +42,7 @@ exports.Dashboard = async (req, res) => {
   }
 };
 
-exports.GetProduct=async (req, res) => {
+exports.GetProduct = async (req, res) => {
   try {
     const products = await Product.find();
     const groupedProducts = products.reduce((acc, product) => {
@@ -54,9 +54,9 @@ exports.GetProduct=async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: "Server error while fetching products" });
   }
-}
+};
 
-exports.Deleteproduct=async (req, res) => {
+exports.Deleteproduct = async (req, res) => {
   try {
     const deletedProduct = await Product.findByIdAndDelete(req.params.id);
     if (!deletedProduct) {
@@ -66,8 +66,7 @@ exports.Deleteproduct=async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Error deleting product", error });
   }
-}
-
+};
 
 exports.Addproduct = async (req, res) => {
   try {
@@ -79,13 +78,50 @@ exports.Addproduct = async (req, res) => {
     }
 
     if (isNaN(rate) || rate < 0) {
-      return res.status(400).json({ message: "Invalid price. Must be a positive number." });
+      return res
+        .status(400)
+        .json({ message: "Invalid price. Must be a positive number." });
     }
-    const newProduct = new product({ name, category, type, image, price: rate, description });
+    const newProduct = new product({
+      name,
+      category,
+      type,
+      image,
+      price: rate,
+      description,
+    });
     await newProduct.save();
 
     res.status(201).json({ message: "Product added successfully!" });
   } catch (err) {
-    res.status(500).json({ message: "Error adding product", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error adding product", error: err.message });
+  }
+};
+
+// Get a single product
+exports.getAProduct = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: "Product not found" });
+    res.json(product);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching product", error });
+  }
+};
+
+exports.UpdateAProduct = async (req, res) => {
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!updatedProduct)
+      return res.status(404).json({ message: "Product not found" });
+    res.json(updatedProduct);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating product", error });
   }
 };

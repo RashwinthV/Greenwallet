@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/product.css"; // Ensure this is correctly imported
-import { FaTrash } from "react-icons/fa"; // Import delete icon
+import { FaTrash, FaEdit } from "react-icons/fa"; // Import delete and edit icons
+import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 
 function Products() {
   const [products, setProducts] = useState({});
@@ -16,6 +17,8 @@ function Products() {
     price: 0,
     description: "",
   });
+
+  const navigate = useNavigate(); // Initialize navigation hook
 
   useEffect(() => {
     fetchProducts();
@@ -52,21 +55,18 @@ function Products() {
       })
       .catch((err) => console.error("Error adding product:", err));
   };
-
-  const handleDelete = (productId) => {
+  const handleDelete = () => {
     if (!deleteProductId) return;
-    console.log(productId);
 
     axios
-      .delete(
-        `${import.meta.env.VITE_BACKEND_URI}/api/products/${deleteProductId}`
-      )
+      .delete(`${import.meta.env.VITE_BACKEND_URI}/api/products/${deleteProductId}`)
       .then(() => {
         fetchProducts();
         setDeleteProductId(null);
       })
       .catch((err) => console.error("Error deleting product:", err));
   };
+
   const confirmDelete = (productId) => {
     setDeleteProductId(productId);
   };
@@ -83,6 +83,10 @@ function Products() {
   const closeProductDetails = () => {
     setSelectedProduct(null);
     document.body.classList.remove("modal-open");
+  };
+
+  const handleEdit = (productId) => {
+    navigate(`/edit-products/${productId}`); // Redirect to edit page
   };
 
   return (
@@ -107,12 +111,14 @@ function Products() {
             <div className="product-list">
               {products[category].map((product) => (
                 <div key={product._id} className="product-card">
-                  <button
-                    className="delete-btn"
-                    onClick={() => confirmDelete(product._id)}
-                  >
-                    <FaTrash />
-                  </button>
+                  <div className="product-actions">
+                    <button className="edit-btn" onClick={() => handleEdit(product._id)}>
+                      <FaEdit />
+                    </button>
+                    <button className="delete-btn" onClick={() => confirmDelete(product._id)}>
+                      <FaTrash />
+                    </button>
+                  </div>
                   <img
                     src={product.image}
                     className="card-img-top"
@@ -132,35 +138,22 @@ function Products() {
       {/* Floating Product Details Modal */}
       {selectedProduct && (
         <div className="product-details-overlay" onClick={closeProductDetails}>
-          <div
-            className="product-details-modal"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="product-details-modal" onClick={(e) => e.stopPropagation()}>
             <button className="close-btn" onClick={closeProductDetails}>
               &times;
             </button>
-            <img
-              src={selectedProduct.image}
-              alt={selectedProduct.name}
-              className="modal-img"
-            />
+            <img src={selectedProduct.image} alt={selectedProduct.name} className="modal-img" />
             <div className="modal-content">
               <h3 className="text-center">{selectedProduct.name}</h3>
-              <p>
-                <strong>Type:</strong> {selectedProduct.type || "N/A"}
-              </p>
-              <p>
-                <strong>Price:</strong> ₹{selectedProduct.price || "N/A"}
-              </p>
-              <p>
-                <strong>Description:</strong>{" "}
-                {selectedProduct.description || "No description available"}
-              </p>
+              <p><strong>Type:</strong> {selectedProduct.type || "N/A"}</p>
+              <p><strong>Price:</strong> ₹{selectedProduct.price || "N/A"}</p>
+              <p><strong>Description:</strong> {selectedProduct.description || "No description available"}</p>
             </div>
           </div>
         </div>
       )}
 
+      {/* Delete Confirmation Modal */}
       {deleteProductId && (
         <div className="delete-confirm-overlay">
           <div className="delete-confirm-modal">
@@ -178,7 +171,7 @@ function Products() {
       )}
 
       {/* Bootstrap Modal for Adding Products */}
-      <div
+       <div
         className="modal w-100 fade"
         id="addProductModal"
         tabIndex="-1"

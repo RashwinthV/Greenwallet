@@ -1,0 +1,42 @@
+/* General container styling */
+.edit-product-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  /* Image Preview */
+  .image-preview {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+  .image-preview img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Form fields */
+  .edit-form .form-control {
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .edit-product-container {
+      width: 90%;
+      padding: 15px;
+    }
+  
+    .edit-form .form-control {
+      font-size: 14px;
+    }
+  }
+  

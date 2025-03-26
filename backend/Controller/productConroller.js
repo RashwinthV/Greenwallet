@@ -26,8 +26,7 @@ exports.getProducts = async (req, res) => {
 exports.addRecord = async (req, res) => {
   const { id } = req.params;
 
-  const { date, amount, type, productId, rate, kgs } = req.body;
-
+  const { date, amount, type, productId, Expense, rate, kgs } = req.body;
   try {
     const user = await Record.findOne({ userId: id });
 
@@ -44,6 +43,7 @@ exports.addRecord = async (req, res) => {
             amount,
             type,
             productId,
+            Expense,
             rate: Rate,
             kgs: Kgs,
           },
@@ -63,6 +63,7 @@ exports.addRecord = async (req, res) => {
         amount,
         type,
         productId,
+        Expense,
         rate: Rate,
         kgs: Kgs,
       };

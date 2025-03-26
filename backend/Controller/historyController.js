@@ -53,16 +53,34 @@ exports.getRecords = async (req, res) => {
 
 exports.Record = async (req, res) => {
   try {
-    const records = await Record.findOne({ userId: req.params.id }).populate(
-      "records.productId"
-    );
-    if (!records) return res.status(404).json({ message: "No records found" });
+    const { id } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-    res.json(records);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    // ✅ Fetch user records with correct filter
+    const userRecords = await Record.findOne({ userId: id }) // 🔥 Fixed here
+      .populate("records.productId", "name category") // ✅ Get product name & category
+      .lean();
+
+
+    if (!userRecords) {
+      return res.json({ records: [], totalPages: 1 });
+    }
+
+    const totalRecords = userRecords.records.length;
+    const paginatedRecords = userRecords.records.slice(skip, skip + limit);
+
+    return res.json({
+      records: paginatedRecords,
+      totalPages: Math.ceil(totalRecords / limit),
+    });
+  } catch (err) {
+    console.error("Error fetching records:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 
 exports.UpdateRecord = async (req, res) => {
 try {
