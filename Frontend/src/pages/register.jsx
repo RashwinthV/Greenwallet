@@ -23,7 +23,10 @@ const Register = ({ language }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URI}/user/register`, formData);
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URI}/user/register`,
+        formData
+      );
       setMessage(response.data.message);
       if (response) navigate("/login");
     } catch (error) {
@@ -35,7 +38,10 @@ const Register = ({ language }) => {
     <div className="container mt-5">
       <div className="row justify-content-center">
         <div className="col-md-6">
-          <div className="card shadow-lg border-0 p-4" style={{ borderRadius: "12px", backgroundColor: "#f8f9fa" }}>
+          <div
+            className="card shadow-lg border-0 p-4"
+            style={{ borderRadius: "12px", backgroundColor: "#f8f9fa" }}
+          >
             {/* Card Header */}
             <div className="text-center">
               <h4 className="mb-0">{translations[language].register}</h4>
@@ -46,7 +52,9 @@ const Register = ({ language }) => {
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label className="form-label fw-semibold">{translations[language].name}</label>
+                  <label className="form-label fw-semibold">
+                    {translations[language].name}
+                  </label>
                   <input
                     type="text"
                     name="name"
@@ -59,7 +67,9 @@ const Register = ({ language }) => {
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label fw-semibold">{translations[language].email}</label>
+                  <label className="form-label fw-semibold">
+                    {translations[language].email}
+                  </label>
                   <input
                     type="email"
                     name="email"
@@ -72,7 +82,9 @@ const Register = ({ language }) => {
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label fw-semibold">{translations[language].password}</label>
+                  <label className="form-label fw-semibold">
+                    {translations[language].password}
+                  </label>
                   <input
                     type="password"
                     name="password"
@@ -82,10 +94,15 @@ const Register = ({ language }) => {
                     required
                     placeholder={translations[language].enterPassword}
                   />
+                  <label className=" mx-3 mt-3 text-danger ">
+                    *{translations[language].passwordlab}
+                  </label>
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label fw-semibold">{translations[language].phoneNo}</label>
+                  <label className="form-label fw-semibold">
+                    {translations[language].phoneNo}
+                  </label>
                   <input
                     type="text"
                     name="phoneNo"
@@ -100,7 +117,9 @@ const Register = ({ language }) => {
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label fw-semibold">{translations[language].age}</label>
+                  <label className="form-label fw-semibold">
+                    {translations[language].age}
+                  </label>
                   <input
                     type="number"
                     name="age"
@@ -113,12 +132,26 @@ const Register = ({ language }) => {
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label fw-semibold">{translations[language].gender}</label>
-                  <select name="gender" className="form-control rounded-pill p-2" value={formData.gender} onChange={handleChange} required>
-                    <option value="">{translations[language].selectGender}</option>
+                  <label className="form-label fw-semibold">
+                    {translations[language].gender}
+                  </label>
+                  <select
+                    name="gender"
+                    className="form-control rounded-pill p-2"
+                    value={formData.gender}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="">
+                      {translations[language].selectGender}
+                    </option>
                     <option value="male">{translations[language].male}</option>
-                    <option value="female">{translations[language].female}</option>
-                    <option value="other">{translations[language].other}</option>
+                    <option value="female">
+                      {translations[language].female}
+                    </option>
+                    <option value="other">
+                      {translations[language].other}
+                    </option>
                   </select>
                 </div>
 
@@ -126,9 +159,17 @@ const Register = ({ language }) => {
                   <button
                     type="submit"
                     className="btn btn-primary w-100 rounded-pill p-2 fs-5 shadow-sm"
-                    style={{ backgroundColor: "#007bff", border: "none", transition: "0.3s" }}
-                    onMouseOver={(e) => (e.target.style.backgroundColor = "#0056b3")}
-                    onMouseOut={(e) => (e.target.style.backgroundColor = "#007bff")}
+                    style={{
+                      backgroundColor: "#007bff",
+                      border: "none",
+                      transition: "0.3s",
+                    }}
+                    onMouseOver={(e) =>
+                      (e.target.style.backgroundColor = "#0056b3")
+                    }
+                    onMouseOut={(e) =>
+                      (e.target.style.backgroundColor = "#007bff")
+                    }
                   >
                     {translations[language].register}
                   </button>
@@ -136,7 +177,10 @@ const Register = ({ language }) => {
 
                 <p className="text-center mt-4">
                   {translations[language].alreadyHaveAccount}{" "}
-                  <a href="/login" className="text-decoration-none text-primary fw-semibold">
+                  <a
+                    href="/login"
+                    className="text-decoration-none text-primary fw-semibold"
+                  >
                     {translations[language].login}
                   </a>
                 </p>

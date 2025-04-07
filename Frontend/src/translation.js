@@ -21,6 +21,7 @@ const translations = {
     login: "Log In",
     loginSuccess: "Login successful!",
     loginFailed: "Login failed. Please check your details.",
+    passwordlab:"password must be 6 digit long",
 
     profit: "Profit",
     loss: "Loss",
@@ -94,6 +95,7 @@ const translations = {
     login: "உள்நுழையவும்",
     loginSuccess: "உள்நுழைவு வெற்றிகரமாக முடிந்தது!",
     loginFailed: "உள்நுழைவு தோல்வியடைந்தது. தயவுசெய்து விவரங்களை சரிபார்க்கவும்.",
+    passwordlab:"கடவுச்சொல் 6 இலக்கங்கள் கொண்டதாக இருக்க வேண்டும்",
 
     profit: "லாபம்",
     loss: "நஷ்டம்",
