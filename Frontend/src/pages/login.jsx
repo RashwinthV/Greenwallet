@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import translations from "../translation";
 // import AuthContext from "../context/Authcontextt";
@@ -91,12 +91,11 @@ function Login({ language }) {
         </form>
         <p className="text-center mt-4">
           {translations[language].dontHaveAccount}
-          <a
-            href="/register"
+          <Link to={"/register"}
             className="text-decoration-none text-primary fw-semibold"
           >
             {translations[language].signUp}
-          </a>
+          </Link>
         </p>
       </div>
     </div>
