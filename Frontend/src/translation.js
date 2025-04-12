@@ -39,6 +39,8 @@ const translations = {
     expense: "Expense",
     description: "Description",
     date: "Date",
+    analysis: "Analysis",
+
 
     // **Months**
     allMonths: "All Months",
@@ -96,6 +98,9 @@ const translations = {
     loginSuccess: "உள்நுழைவு வெற்றிகரமாக முடிந்தது!",
     loginFailed: "உள்நுழைவு தோல்வியடைந்தது. தயவுசெய்து விவரங்களை சரிபார்க்கவும்.",
     passwordlab:"கடவுச்சொல் 6 இலக்கங்கள் கொண்டதாக இருக்க வேண்டும்",
+    analysis: "ஆய்வு",
+
+
 
     profit: "லாபம்",
     loss: "நஷ்டம்",

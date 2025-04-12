@@ -9,6 +9,7 @@ import Records from "./pages/Records";
 import Entry from "./pages/Entry";
 import Login from "./pages/login";
 import Register from "./pages/register";
+import Analysis from "./pages/Analysis";
 
 function App() {
   const [language, setLanguage] = useState("en");
@@ -54,6 +55,7 @@ function App() {
         />
         <Route path="/login" element={<Login language={language} />} />
         <Route path="/register" element={<Register language={language} />} />
+        <Route path="/Analysis" element={<Analysis language={language}/>}/>
         
         {/* ✅ No Need for an Admin Route (Handled in useEffect) */}
       </Routes>

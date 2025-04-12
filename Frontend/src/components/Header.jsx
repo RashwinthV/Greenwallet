@@ -108,6 +108,12 @@ const Header = ({ language, setLanguage }) => {
                   {texts[language].entry}
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/analysis" onClick={closeNavbar}>
+                  {texts[language].analysis || "Analysis"}
+                </Link>
+              </li>
+
               {isLoggedIn ? (
                 <li className="nav-item">
                   <button
@@ -164,9 +170,10 @@ const Header = ({ language, setLanguage }) => {
       {/* Mobile Top Bar (only welcome and language) */}
       <div className="d-flex d-md-none justify-content-between align-items-center bg-dark text-white px-3 py-2">
         <span className="fw-semibold">
-        <Link className="navbar-brand fw-bold fs-3" to="/">
+          <Link className="navbar-brand fw-bold fs-3" to="/">
             Green Wallet
-          </Link>        </span>
+          </Link>{" "}
+        </span>
         <div className="d-flex align-items-center gap-2">
           {/* Language Dropdown */}
           <div className="dropdown">
@@ -256,6 +263,9 @@ const Header = ({ language, setLanguage }) => {
         </Link>
         <Link to="/entry" className="text-white text-center">
           <i className="bi bi-pencil-square fs-4"></i>
+        </Link>
+        <Link to="/analysis" className="text-white text-center">
+          <i className="bi bi-graph-up fs-4"></i>
         </Link>
       </nav>
     </>
