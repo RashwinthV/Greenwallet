@@ -23,8 +23,8 @@ const Footer = ({ language }) => {
   };
 
   return (
-    <footer className="footer bg-dark text-light py-4" >
-      <div className="container text-center">
+<footer className="footer bg-dark text-light py-4 mb-3 mb-md-0">
+<div className="container text-center">
         <div className="row align-items-center">
           {/* Copyright Section */}
           <div className="col-md-6 text-start">
