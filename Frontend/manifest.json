@@ -1,6 +1,6 @@
 {
     "name": "Green Wallet",
-    "short_name": "App",
+    "short_name":"Green Wallet",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
