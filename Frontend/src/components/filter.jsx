@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import translations from "../translation";
-import '../styles/filter.css'
+import '../styles/filter.css';
 
-const MonthFilter = ({ transactions, setFilteredTransactions, language }) => {
-  const [selectedMonth, setSelectedMonth] = useState("none");
-
-  // List of months
+const MonthFilter = ({
+  transactions,
+  setFilteredTransactions,
+  language,
+  selectedYear, // ✅ receive selectedYear from parent
+  setSelectedMonth, // ✅ controlled from Dashboard
+  selectedMonth     // ✅ controlled from Dashboard
+}) => {
   const months = [
     { value: "none", label: translations[language]?.none || "None" },
     { value: "", label: translations[language]?.allMonths || "All Months" },
@@ -28,15 +32,15 @@ const MonthFilter = ({ transactions, setFilteredTransactions, language }) => {
     setSelectedMonth(selectedValue);
 
     if (selectedValue === "none" || selectedValue === "") {
-      setFilteredTransactions(transactions); // Show all transactions
+      // Let parent component apply the filter logic
       return;
     }
 
-    const currentYear = new Date().getFullYear();
+    // Only filter by year+month
     const filteredData = transactions.filter((t) => {
       const transactionDate = new Date(t.date);
       return (
-        transactionDate.getFullYear() === currentYear &&
+        transactionDate.getFullYear() === selectedYear &&
         transactionDate.getMonth() === parseInt(selectedValue, 10) - 1
       );
     });

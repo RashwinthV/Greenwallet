@@ -5,7 +5,6 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "../styles/Header.css";
 
 const Header = ({ language, setLanguage }) => {
-  const location = useLocation();
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
   const isLoggedIn = Boolean(localStorage.getItem("user"));
 
