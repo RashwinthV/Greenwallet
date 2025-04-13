@@ -53,48 +53,54 @@ const Dashboard = ({ language }) => {
   }, [userId]);
 
   useEffect(() => {
-    let filteredData = transactions;
-
-    if (filter !== "all") {
-      const today = new Date();
-      filteredData = transactions.filter((transaction) => {
-        if (!transaction.date) return false;
-        const transactionDate = new Date(transaction.date);
-
-        switch (filter) {
-          case "today":
-            return transactionDate.toDateString() === today.toDateString();
-          case "week":
-            const oneWeekAgo = new Date();
-            oneWeekAgo.setDate(today.getDate() - 7);
-            return transactionDate >= oneWeekAgo;
-          case "month":
-            return (
-              transactionDate.getMonth() === today.getMonth() &&
-              transactionDate.getFullYear() === today.getFullYear()
-            );
-          case "year":
-            return transactionDate.getFullYear() === today.getFullYear();
-          default:
-            return true;
-        }
-      });
-    } else {
-      setSelectedMonth("none");
+    try {
+      let filteredData = transactions;
+  
+      if (filter !== "all") {
+        const today = new Date();
+        filteredData = transactions.filter((transaction) => {
+          if (!transaction.date) return false;
+          const transactionDate = new Date(transaction.date);
+  
+          switch (filter) {
+            case "today":
+              return transactionDate.toDateString() === today.toDateString();
+            case "week":
+              const oneWeekAgo = new Date();
+              oneWeekAgo.setDate(today.getDate() - 7);
+              return transactionDate >= oneWeekAgo;
+            case "month":
+              return (
+                transactionDate.getMonth() === today.getMonth() &&
+                transactionDate.getFullYear() === today.getFullYear()
+              );
+            case "year":
+              return transactionDate.getFullYear() === today.getFullYear();
+            default:
+              return true;
+          }
+        });
+      } else {
+        setSelectedMonth("none");
+      }
+  
+      if (selectedMonth && selectedMonth !== "none") {
+        const currentYear = new Date().getFullYear();
+        filteredData = filteredData.filter((t) => {
+          const transactionDate = new Date(t.date);
+          return (
+            transactionDate.getFullYear() === currentYear &&
+            transactionDate.getMonth() === parseInt(selectedMonth, 10) - 1
+          );
+        });
+      }
+  
+      setFilteredTransactions(filteredData);
+    } catch (error) {
+      
+    }finally{
+      setLoading(false)
     }
-
-    if (selectedMonth && selectedMonth !== "none") {
-      const currentYear = new Date().getFullYear();
-      filteredData = filteredData.filter((t) => {
-        const transactionDate = new Date(t.date);
-        return (
-          transactionDate.getFullYear() === currentYear &&
-          transactionDate.getMonth() === parseInt(selectedMonth, 10) - 1
-        );
-      });
-    }
-
-    setFilteredTransactions(filteredData);
   }, [filter, selectedMonth, transactions]);
 
   const totalIncome = filteredTransactions
