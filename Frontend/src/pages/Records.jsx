@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import translations from "../translation";
 import MonthFilter from "../components/filter";
+import LoadingSpinner from "../components/Loadong";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -14,6 +15,8 @@ const Dashboard = ({ language }) => {
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [filter, setFilter] = useState("today");
   const [selectedMonth, setSelectedMonth] = useState("none");
+  const [loading, setLoading] = useState(true);
+
 
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
@@ -41,6 +44,8 @@ const Dashboard = ({ language }) => {
         );
         setTransactions([]);
         setFilteredTransactions([]);
+      }finally{
+        setLoading(false)
       }
     };
 
@@ -138,6 +143,10 @@ const Dashboard = ({ language }) => {
     maintainAspectRatio: false,
     cutout: "80%",
   };
+
+  if(loading){
+    <LoadingSpinner/>
+  }
 
   return (
     <Container id="con" fluid className="p-3 ">
