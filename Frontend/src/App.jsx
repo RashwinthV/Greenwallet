@@ -13,6 +13,7 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import Analysis from "./pages/Analysis";
 import LoadingSpinner from "./components/Loadong";
+import EditRecords from "./pages/EditRecords";
 
 function App() {
   const [language, setLanguage] = useState("en");
@@ -68,6 +69,8 @@ function App() {
         <Route path="/login" element={<Login language={language} />} />
         <Route path="/register" element={<Register language={language} />} />
         <Route path="/Analysis" element={<Analysis language={language} />} />
+        <Route path="/edit-records" element={<EditRecords language={language} />} />
+
       </Routes>
       {!isAdminRoute && <Footer language={language} />}
     </>

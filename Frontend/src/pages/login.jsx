@@ -10,7 +10,6 @@ function Login({ language }) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  // const { login } = useContext(AuthContext); // Get login function from AuthContext
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -26,9 +25,11 @@ function Login({ language }) {
       localStorage.setItem("token",res.data.token)
 
       if (res.status === 200) {
-        // login(user); // ✅ Call login function with user data
         toast.success(translations[language].loginSuccess);
         navigate("/");
+        setTimeout(() => {
+          window.location.reload();
+        }, 0);
       }
     } catch (err) {
       toast.error(

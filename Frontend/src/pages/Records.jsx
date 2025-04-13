@@ -5,6 +5,7 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import translations from "../translation";
+import {Link} from 'react-router-dom'
 import MonthFilter from "../components/filter";
 import LoadingSpinner from "../components/Loadong";
 
@@ -251,9 +252,13 @@ const Dashboard = ({ language }) => {
         </Col>
 
         <Col xs={12} md={6}>
+        <div className="d-flex mx-auto">
           <h4>
             {translations[language]?.transactionHistory || "Transaction History"}
           </h4>
+          <Link to={"/edit-records"} className="mx-2 bg-danger rounded text-white p-2 " style={{textDecoration:"none",marginBottom:"10px"}}>Edit Records</Link>
+        </div>
+          
           <div
             style={{ maxHeight: "400px", overflowY: "auto", overflowX: "auto" }}
           >

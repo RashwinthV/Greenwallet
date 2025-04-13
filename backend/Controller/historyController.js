@@ -142,3 +142,32 @@ exports.Deleterecord = async (req, res) => {
     res.status(500).json({ error: "Server error while deleting record" });
   }
 };
+
+exports.editrecords = async (req, res) => {
+  const { id, recordId } = req.params; // id = userId
+  const updatedRecord = req.body;
+
+  try {
+    const result = await Record.findOneAndUpdate(
+      { userId: id, "records._id": recordId },
+      {
+        $set: {
+          "records.$": updatedRecord,
+        },
+      },
+      { new: true }
+    );
+
+    if (!result) {
+      return res.status(404).json({ error: "Record not found" });
+    }
+
+    res.status(200).json({
+      message: "Record updated successfully",
+      updated: result,
+    });
+  } catch (err) {
+    console.error("Error updating record:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

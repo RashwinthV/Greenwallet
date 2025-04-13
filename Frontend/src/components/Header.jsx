@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../styles/Header.css";
+import { toast } from "react-toastify";
 
 const Header = ({ language, setLanguage }) => {
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
-  const isLoggedIn = Boolean(localStorage.getItem("user"));
+  const [user, setUser] = useState(null);
+  
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const texts = {
     en: {
@@ -31,14 +35,48 @@ const Header = ({ language, setLanguage }) => {
     },
   };
 
-  const storedUser = localStorage.getItem("user");
-  const user = storedUser ? JSON.parse(storedUser) : null;
-  const role = user?.role || "";
-
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language");
     if (savedLanguage) setLanguage(savedLanguage);
+    const storedUser = localStorage.getItem("user");
+    const users = storedUser ? JSON.parse(storedUser) : null;
+    setUser(users)
+    const verifyToken = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URI}/user/verify-token`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        if (response.data?.user) {
+          setIsLoggedIn(true);
+        } else {
+          handleSessionExpiry();
+        }
+      } catch (error) {
+        console.error("Token verification failed", error);
+        handleLogout();
+      }
+    };
+
+    verifyToken();
   }, [setLanguage]);
+
+  const handleSessionExpiry = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    setUser(null);
+    setIsLoggedIn(false);
+    toast.info("Your session has expired. Please log in again.");
+    setTimeout(() => {
+      window.location.href = "/login";
+    }, 1500);
+  };
 
   const handleLanguageChange = (lang) => {
     setLanguage(lang);
@@ -49,7 +87,9 @@ const Header = ({ language, setLanguage }) => {
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
-    window.location.reload();
+    setUser(null);
+    setIsLoggedIn(false);
+    toast.success("You have been logged out.");
   };
 
   const closeNavbar = () => {
@@ -85,7 +125,7 @@ const Header = ({ language, setLanguage }) => {
               <p className="nav-item nav-link mt-1 mb-0">
                 Welcome {user ? user.name : "Guest"}
               </p>
-              {role === "admin" && (
+              {user?.role === "admin" && (
                 <li className="nav-item">
                   <Link className="nav-link" to="/Admin" onClick={closeNavbar}>
                     {texts[language].admin}
