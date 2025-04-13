@@ -2,6 +2,8 @@ import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-
 import { useState, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Body from "./pages/Body";
@@ -10,34 +12,44 @@ import Entry from "./pages/Entry";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import Analysis from "./pages/Analysis";
+import LoadingSpinner from "./components/Loadong";
 
 function App() {
   const [language, setLanguage] = useState("en");
   const [id, setId] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const location = useLocation(); // ✅ Fix: Define location correctly
+  const location = useLocation();
+
+  const isAdminRoute = location.pathname.startsWith("/Admin");
 
   useEffect(() => {
-    let storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      let userObject = JSON.parse(storedUser);
-      setId(userObject._id);
-    }
-    setLoading(false);
-  }, [navigate]);
+    const timer = setTimeout(() => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        const userObject = JSON.parse(storedUser);
+        setId(userObject._id);
+      }
+      setLoading(false);
+    }, 1000); 
 
-  const isAdminRoute = location.pathname.startsWith("/Admin"); // ✅ Fix: Now works correctly
+    return () => clearTimeout(timer);
+  }, []);
 
-  // ✅ Open Admin Panel in a New Tab
   useEffect(() => {
     if (isAdminRoute) {
       window.open(`${import.meta.env.VITE_ADMIN_URI}`, "_blank");
-      navigate("/"); 
+      navigate("/");
     }
   }, [isAdminRoute, navigate]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <div style={{ height: "100vh", backgroundColor: "#f8f9fa" }}>
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -55,9 +67,7 @@ function App() {
         />
         <Route path="/login" element={<Login language={language} />} />
         <Route path="/register" element={<Register language={language} />} />
-        <Route path="/Analysis" element={<Analysis language={language}/>}/>
-        
-        {/* ✅ No Need for an Admin Route (Handled in useEffect) */}
+        <Route path="/Analysis" element={<Analysis language={language} />} />
       </Routes>
       {!isAdminRoute && <Footer language={language} />}
     </>
