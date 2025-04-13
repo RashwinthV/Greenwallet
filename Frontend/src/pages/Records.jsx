@@ -6,7 +6,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import translations from "../translation";
 import MonthFilter from "../components/filter";
-import LoadingSpinner from "../components/Loadong";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -15,7 +14,6 @@ const Dashboard = ({ language }) => {
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [filter, setFilter] = useState("today");
   const [selectedMonth, setSelectedMonth] = useState("none");
-  const [isLoading, setIsLoading] = useState(true);
 
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
@@ -43,15 +41,57 @@ const Dashboard = ({ language }) => {
         );
         setTransactions([]);
         setFilteredTransactions([]);
-      } finally {
-        setIsLoading(false);
       }
     };
 
     fetchTransactions();
   }, [userId]);
 
-  // 🧮 Totals and Chart Data
+  useEffect(() => {
+    let filteredData = transactions;
+
+    if (filter !== "all") {
+      const today = new Date();
+      filteredData = transactions.filter((transaction) => {
+        if (!transaction.date) return false;
+        const transactionDate = new Date(transaction.date);
+
+        switch (filter) {
+          case "today":
+            return transactionDate.toDateString() === today.toDateString();
+          case "week":
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(today.getDate() - 7);
+            return transactionDate >= oneWeekAgo;
+          case "month":
+            return (
+              transactionDate.getMonth() === today.getMonth() &&
+              transactionDate.getFullYear() === today.getFullYear()
+            );
+          case "year":
+            return transactionDate.getFullYear() === today.getFullYear();
+          default:
+            return true;
+        }
+      });
+    } else {
+      setSelectedMonth("none");
+    }
+
+    if (selectedMonth && selectedMonth !== "none") {
+      const currentYear = new Date().getFullYear();
+      filteredData = filteredData.filter((t) => {
+        const transactionDate = new Date(t.date);
+        return (
+          transactionDate.getFullYear() === currentYear &&
+          transactionDate.getMonth() === parseInt(selectedMonth, 10) - 1
+        );
+      });
+    }
+
+    setFilteredTransactions(filteredData);
+  }, [filter, selectedMonth, transactions]);
+
   const totalIncome = filteredTransactions
     .filter((t) => t.type === "income")
     .reduce((acc, t) => acc + t.amount, 0);
@@ -60,10 +100,15 @@ const Dashboard = ({ language }) => {
     .filter((t) => t.type === "expense")
     .reduce((acc, t) => acc + t.amount, 0);
 
-  const totalKgs = filteredTransactions.reduce((acc, t) => {
-    if (t.productCategory === "consumable") return acc + (t.kgs || 0);
-    return acc;
-  }, 0);
+  const totalKgs = filteredTransactions.reduce(
+    (acc, t) => {
+      if (t.productCategory === "consumable") {
+        return acc + (t.kgs || 0);
+      }
+      return acc;
+    },
+    0
+  );
 
   const netTotal = totalIncome - totalExpense;
   const status =
@@ -94,11 +139,8 @@ const Dashboard = ({ language }) => {
     cutout: "80%",
   };
 
-  // ⏳ Show spinner while loading
-  if (isLoading) return <LoadingSpinner />;
-
   return (
-    <Container id="con" fluid className="p-3">
+    <Container id="con" fluid className="p-3 ">
       <Row className="justify-content-center">
         <Col xs={12} md={6} className="text-center mb-4">
           <div className="d-flex justify-content-center">
@@ -127,7 +169,6 @@ const Dashboard = ({ language }) => {
               </div>
             </div>
           </div>
-
           <div className="d-flex flex-wrap align-items-center w-100 gap-3 mt-3 justify-content-center">
             <Dropdown>
               <Dropdown.Toggle variant="primary" className="w-100">
@@ -175,35 +216,22 @@ const Dashboard = ({ language }) => {
                       <td>₹{transaction.rate || "N/A"}</td>
                       <td>{transaction.kgs || "N/A"}</td>
                       <td>{transaction.productName || "N/A"}</td>
-                      <td className="text-success">
-                        {transaction.type === "income" ? `₹${transaction.amount}` : "-"}
-                      </td>
-                      <td className="text-danger">
-                        {transaction.type === "expense" ? `₹${transaction.amount}` : "-"}
-                      </td>
+                      <td className="text-success">{transaction.type === "income" ? `₹${transaction.amount}` : "-"}</td>
+                      <td className="text-danger">{transaction.type === "expense" ? `₹${transaction.amount}` : "-"}</td>
                     </tr>
                   ))
                 ) : (
-                  <tr>
-                    <td colSpan="6" className="text-center">
-                      No transactions available
-                    </td>
-                  </tr>
+                  <tr><td colSpan="6" className="text-center">No transactions available</td></tr>
                 )}
               </tbody>
             </Table>
           </div>
 
+          {/* Total Summary Section (Now below Table) */}
           <div className="mt-3 text-center">
-            <p>
-              <strong>Total Kgs: {totalKgs.toFixed(2)} kg</strong>
-            </p>
-            <p className="text-success">
-              <strong>Income: ₹{totalIncome.toFixed(2)}</strong>
-            </p>
-            <p className="text-danger">
-              <strong>Expense: ₹{totalExpense.toFixed(2)}</strong>
-            </p>
+            <p><strong>Total Kgs: {totalKgs.toFixed(2)} kg</strong></p>
+            <p className="text-success"><strong>Income: ₹{totalIncome.toFixed(2)}</strong></p>
+            <p className="text-danger"><strong>Expense: ₹{totalExpense.toFixed(2)}</strong></p>
           </div>
         </Col>
       </Row>
