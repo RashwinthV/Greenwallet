@@ -64,7 +64,7 @@ const Sidebar = () => {
 
       {/* Bottom Nav for Mobile */}
       {isMobile && (
-        <nav className="d-flex d-md-none fixed-bottom justify-content-around bg-dark py-2 text-white shadow border-top">
+        <nav className="d-flex d-md-none fixed-bottom justify-content-around bg-dark py-2 text-white shadow border-top" >
           <NavLink
             to="/dashboard"
             className={({ isActive }) =>

@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const Footer = () => {
   return (
-    <footer className="bg-white text-center text-dark py-3 mt-auto shadow-sm">
+    <footer className="bg-white  text-center py-4 text-dark py-3 mt-auto shadow-sm" >
       <p className="m-0">&copy; {new Date().getFullYear()} Admin Dashboard</p>
     </footer>
   );

@@ -19,7 +19,7 @@ function Home() {
           {location.pathname === "/" ? <Welcome /> : <Outlet />}
         </main>
       </div>
-      <Footer />
+      <Footer  />
     </div>
   );
 }

@@ -3,9 +3,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import RateECGChart from '../components/Analysis/analysischart';
 import ProductSummaryCards from '../components/Analysis/analysisProduct';
+import LoadingSpinner from "../components/Loadong";
+
 
 const RecordAnalysis = () => {
   const [records, setRecords] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
   const userId = user?._id || "";
@@ -25,6 +29,7 @@ const RecordAnalysis = () => {
     })
       .then((res) => {
         setRecords(res.data);
+        setLoading(false)
       })
       .catch((err) => console.error('Fetch error:', err));
   }, [userId]);
@@ -42,10 +47,13 @@ const RecordAnalysis = () => {
     })
       .then((res) => {
         setproduct(res.data);
+        setLoading(false)
       })
       .catch((err) => console.error('Fetch error:', err));
   }, [userId]);
-  
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div style={{ background: 'white', padding: '20px', minHeight: '100vh' }}>

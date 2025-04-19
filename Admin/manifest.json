@@ -1,6 +1,6 @@
 {
-    "name": "Green Wallet",
-    "short_name":"Green Wallet",
+    "name": "Admin",
+    "short_name":"Admin",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
