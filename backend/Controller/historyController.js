@@ -12,7 +12,7 @@ exports.getRecords = async (req, res) => {
 
     const userRecords = await Record.findOne({
       userId: new mongoose.Types.ObjectId(userId),
-    }).populate("records.productId", "name type category price");
+    }).populate("records.productId");
 
     if (!userRecords || userRecords.records.length === 0) {
       return res
@@ -21,7 +21,8 @@ exports.getRecords = async (req, res) => {
     }
 
     const formattedRecords = await Promise.all(
-      userRecords.records.map(async (record) => {
+      userRecords.    
+      records.map(async (record) => {
         let productDetails = record.productId;
 
         if (!productDetails || !productDetails.name) {
@@ -38,13 +39,14 @@ exports.getRecords = async (req, res) => {
           amount: record.amount,
           type: record.type,
           productId: productDetails?._id || null,
-          productName: productDetails?.name || "Unknown",
-          productCategory: productDetails?.category || "Unknown",
+          productName: productDetails?.name || record?.Expense,
+          productCategory: productDetails?.category || "Work",
         };
       })
     );
 
     res.json({ success: true, records: formattedRecords });
+    
   } catch (error) {
     console.error("❌ Error fetching transactions:", error);
     res.status(500).json({ error: "Error fetching transactions" });

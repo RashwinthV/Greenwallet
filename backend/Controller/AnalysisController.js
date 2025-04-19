@@ -61,6 +61,7 @@ exports.getRecordsWithProducts = async (req, res) => {
         totalPrice += price;
   
         return {
+          productImage:product.image,
           productName: product.name,
           category: product.category,
           kg,

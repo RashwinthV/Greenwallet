@@ -37,6 +37,7 @@ const Dashboard = ({ language }) => {
           }
         );
         setTransactions(res.data.records || []);
+        
       } catch (error) {
         console.error(
           "❌ Error fetching transactions:",
@@ -147,6 +148,7 @@ const Dashboard = ({ language }) => {
       },
     ],
   };
+  
 
   const chartOptions = {
     responsive: true,
@@ -256,7 +258,7 @@ const Dashboard = ({ language }) => {
           <h4>
             {translations[language]?.transactionHistory || "Transaction History"}
           </h4>
-          <Link to={"/edit-records"} className="mx-2 bg-danger rounded text-white p-2 " style={{textDecoration:"none",marginBottom:"10px"}}>Edit Records</Link>
+          <Link to={"/edit-records"} className="mx-auto bg-danger rounded text-white p-2 " style={{textDecoration:"none",marginBottom:"10px"}}>Edit Records</Link>
         </div>
           
           <div
@@ -276,7 +278,7 @@ const Dashboard = ({ language }) => {
               <tbody>
                 {filteredTransactions.length > 0 ? (
                   filteredTransactions.map((transaction) => (
-                    <tr key={transaction._id || transaction.id}>
+                  <tr key={transaction._id || transaction.id}>
                       <td>
                         {new Date(transaction.date).toLocaleDateString()}
                       </td>

@@ -3,18 +3,19 @@ import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { MdAdminPanelSettings } from "react-icons/md";
 import "../styles/Header.css";
 import { toast } from "react-toastify";
 
 const Header = ({ language, setLanguage }) => {
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
   const [user, setUser] = useState(null);
-  
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const texts = {
     en: {
-      admin: "Admin Panel",
+      admin: "Admin",
       home: "Home",
       records: "Records",
       entry: "Entry",
@@ -40,7 +41,7 @@ const Header = ({ language, setLanguage }) => {
     if (savedLanguage) setLanguage(savedLanguage);
     const storedUser = localStorage.getItem("user");
     const users = storedUser ? JSON.parse(storedUser) : null;
-    setUser(users)
+    setUser(users);
     const verifyToken = async () => {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -263,6 +264,23 @@ const Header = ({ language, setLanguage }) => {
               className="dropdown-menu dropdown-menu-end"
               aria-labelledby="profileDropdownMobile"
             >
+              {user?.role === "admin" && (
+                <li className="nav-item d-flex align-items-center">
+                  <Link
+                    className="nav-link mx-4 d-flex align-items-center"
+                    to="/Admin"
+                    onClick={closeNavbar}
+                  >
+                    <MdAdminPanelSettings
+                      size={24}
+                      color="blue"
+                      className="me-2"
+                    />
+                    <span>{texts[language].admin}</span>
+                  </Link>
+                </li>
+              )}
+
               {isLoggedIn ? (
                 <>
                   <li>

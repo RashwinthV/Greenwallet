@@ -1,17 +1,13 @@
 .sidebar {
-  background-color: white;
   width: 250px;
+  background-color: white;
   transition: width 0.3s ease-in-out;
   border-right: 1px solid #ddd;
 }
 
-.sidebar.closed {
-  width: 70px;
-}
-
-/* Navigation Links */
+/* Common NavLink Styling */
 .nav-link {
-  color: rgb(0, 0, 0) !important;
+  color: black !important;
   padding: 10px;
   display: flex;
   align-items: center;
@@ -19,25 +15,25 @@
   border-radius: 5px;
   transition: background-color 0.3s, color 0.3s;
 }
-.dropdown-item:hover {
-  background-color: red !important;  /* Changes background to red */
-  color: white !important;  /* Changes text color to white */
-}
 
-/* Hover effect */
 .nav-link:hover {
   background-color: red !important;
   color: white !important;
 }
 
-/* Active link */
 .nav-link.active {
   background-color: red !important;
   color: white !important;
 }
 
-/* Adjust layout when collapsed */
-.sidebar .nav-link .me-2 {
-  font-size: 1.2rem;
+/* Mobile bottom nav active icon */
+.fixed-bottom .nav-link.active i {
+  color: red !important;
 }
 
+/* Responsive hide */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+}

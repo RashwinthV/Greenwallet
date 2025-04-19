@@ -19,7 +19,9 @@ const ProductSummaryCards = ({ product }) => {
 
   useEffect(() => {
     const groupedProducts = product.reduce((acc, record) => {
-      const { productName, category, kg, quantity, price } = record;
+      const { productImage, productName, category, kg, quantity, price } =
+        record;
+
       if (acc[productName]) {
         acc[productName].totalKg += kg || 0;
         acc[productName].totalQuantity += quantity || 0;
@@ -28,6 +30,7 @@ const ProductSummaryCards = ({ product }) => {
         acc[productName] = {
           productName,
           category,
+          productImage,
           totalKg: kg || 0,
           totalQuantity: quantity || 0,
           totalPrice: price || 0,
@@ -42,38 +45,97 @@ const ProductSummaryCards = ({ product }) => {
   }, [product]);
 
   return (
-    <div className="container mt-4">
-      <div className="row g-4">
-        {summarizedProducts.length > 0 ? (
-          summarizedProducts.map(
-            ({ productName, category, totalKg, totalQuantity, totalPrice }) => (
+    <div className="container mt-4 mb-5">
+      {/* Horizontal scroll container only on small screens */}
+      <div className="d-block d-sm-none overflow-auto">
+        <div className="d-flex flex-nowrap gap-3 pb-2">
+          {summarizedProducts.map(
+            ({
+              productImage,
+              productName,
+              category,
+              totalKg,
+              totalQuantity,
+              totalPrice,
+            }) => (
               <div
                 key={productName}
-                className="col-12 col-sm-6 col-md-4 col-lg-3"
+                className="card shadow-sm"
+                style={{ minWidth: "48%", flex: "0 0 auto" }}
               >
-                <div className="card h-100 shadow-sm">
-                  <div className="card-body">
-                    <h5 className="card-title">{productName}</h5>
-                    <p className="card-text">
-                      <strong>Category:</strong> {category}
-                      <br />
-                      <strong>Quantity:</strong>{" "}
-                      {formatQuantity(category, totalKg, totalQuantity)}
-                      <br />
-                      <strong>Total Price:</strong> ₹
-                      {totalPrice.toLocaleString()}
-                    </p>
-                  </div>
+                <div className="card-body">
+                  <img
+                    src={productImage}
+                    alt={productName}
+                    className="img-fluid rounded shadow-sm mb-2"
+                    style={{
+                      width: "80px",
+                      height: "80px",
+                      objectFit: "cover",
+                    }}
+                  />
+                  <h6 className="card-title">{productName}</h6>
+                  <p className="card-text small">
+                    <strong>Category:</strong> {category}
+                    <br />
+                    <strong>Quantity:</strong>{" "}
+                    {formatQuantity(category, totalKg, totalQuantity)}
+                    <br />
+                    <strong>₹</strong> {totalPrice.toLocaleString()}
+                  </p>
                 </div>
               </div>
             )
+          )}
+        </div>
+      </div>
+  
+      {/* Grid layout for larger screens */}
+      <div className="row g-4 d-none d-sm-flex">
+        {summarizedProducts.map(
+          ({
+            productImage,
+            productName,
+            category,
+            totalKg,
+            totalQuantity,
+            totalPrice,
+          }) => (
+            <div
+              key={productName}
+              className="col-6 col-md-4 col-lg-3"
+            >
+              <div className="card h-100 shadow-sm">
+                <div className="card-body">
+                  <img
+                    src={productImage}
+                    alt={productName}
+                    className="img-fluid rounded shadow-sm mb-2"
+                    style={{
+                      width: "80px",
+                      height: "80px",
+                      objectFit: "cover",
+                    }}
+                  />
+                  <h5 className="card-title">{productName}</h5>
+                  <p className="card-text">
+                    <strong>Category:</strong> {category}
+                    <br />
+                    <strong>Quantity:</strong>{" "}
+                    {formatQuantity(category, totalKg, totalQuantity)}
+                    <br />
+                    <strong>Total Price:</strong> ₹
+                    {totalPrice.toLocaleString()}
+                  </p>
+                </div>
+              </div>
+            </div>
           )
-        ) : (
-          <p>No products to display.</p>
         )}
       </div>
     </div>
   );
+  
 };
 
 export default ProductSummaryCards;
