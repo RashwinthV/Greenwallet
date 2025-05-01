@@ -57,12 +57,10 @@ exports.SendVerifyemail = async (req, res) => {
 // Verify the OTP
 exports.Verifyemail = async (req, res) => {
   const { email, otp } = req.body;
-  console.log(req.body);
   
 
   try {
     const user = await User.findOne({ email, verificationCode: otp });
-    console.log(user);
     
 
     if (!user) {
@@ -70,7 +68,6 @@ exports.Verifyemail = async (req, res) => {
     }
 
     if (Date.now() > user.otpExpiresAt) {
-        console.log("yes");
         
       return res.json({success:false, message: 'OTP has expired.' });
     }
