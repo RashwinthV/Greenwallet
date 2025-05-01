@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import RateECGChart from '../components/Analysis/analysischart';
 import ProductSummaryCards from '../components/Analysis/analysisProduct';
-import LoadingSpinner from "../components/Loadong";
+import LoadingSpinner from "../components/Loading/Loadong";
 
 
 const RecordAnalysis = () => {

@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { MdAdminPanelSettings } from "react-icons/md";
-import "../styles/Header.css";
 import { toast } from "react-toastify";
+import "../styles/Header.css";
+import LoginLoader from "./Loading/loginLoader";
 
 const Header = ({ language, setLanguage }) => {
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
   const [user, setUser] = useState(null);
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true); // loader state
 
   const texts = {
     en: {
@@ -39,12 +40,17 @@ const Header = ({ language, setLanguage }) => {
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language");
     if (savedLanguage) setLanguage(savedLanguage);
+
     const storedUser = localStorage.getItem("user");
     const users = storedUser ? JSON.parse(storedUser) : null;
     setUser(users);
+
     const verifyToken = async () => {
       const token = localStorage.getItem("token");
-      if (!token) return;
+      if (!token) {
+        setLoading(false); // done loading
+        return;
+      }
 
       try {
         const response = await axios.get(
@@ -61,7 +67,8 @@ const Header = ({ language, setLanguage }) => {
         }
       } catch (error) {
         console.error("Token verification failed", error);
-        handleLogout();
+      } finally {
+        setLoading(false); // done loading
       }
     };
 
@@ -98,6 +105,8 @@ const Header = ({ language, setLanguage }) => {
     document.getElementById("navbarNav")?.classList.remove("show");
   };
 
+  if (loading) return <LoginLoader />;
+
   return (
     <>
       {/* Desktop / Tablet Navbar */}
@@ -123,9 +132,7 @@ const Header = ({ language, setLanguage }) => {
             id="navbarNav"
           >
             <ul className="navbar-nav ms-auto gap-3">
-              <p className="nav-item nav-link mt-1 mb-0">
-                Welcome {user ? user.name : "Guest"}
-              </p>
+              
               {user?.role === "admin" && (
                 <li className="nav-item">
                   <Link className="nav-link" to="/Admin" onClick={closeNavbar}>
@@ -155,14 +162,26 @@ const Header = ({ language, setLanguage }) => {
               </li>
 
               {isLoggedIn ? (
-                <li className="nav-item">
-                  <button
-                    className="nav-link btn btn-link"
-                    onClick={handleLogout}
-                  >
-                    {texts[language].logout}
-                  </button>
-                </li>
+                <>
+                  <li className="d-flex align-items-center">
+                    <Link
+                      className="nav-item d-flex align-items-center " style={{textDecoration:"none", color:"grey"}}
+                      to="/profile"
+                    >
+                      <i className="bi bi-person-circle fs-5 mx-2"></i>
+                     Profile
+                    </Link>
+                  </li>
+
+                  <li className="nav-item">
+                    <button
+                      className="nav-link btn btn-link"
+                      onClick={handleLogout}
+                    >
+                      {texts[language].logout}
+                    </button>
+                  </li>
+                </>
               ) : (
                 <li className="nav-item">
                   <Link className="nav-link" to="/login" onClick={closeNavbar}>

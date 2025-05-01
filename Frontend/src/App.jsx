@@ -12,8 +12,10 @@ import Entry from "./pages/Entry";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import Analysis from "./pages/Analysis";
-import LoadingSpinner from "./components/Loadong";
+import LoadingSpinner from "./components/Loading/Loadong";
 import EditRecords from "./pages/EditRecords";
+import Profile from "./pages/User/profile";
+import VerifyEmail from "./components/verifyEmail";
 
 function App() {
   const [language, setLanguage] = useState("en");
@@ -70,6 +72,8 @@ function App() {
         <Route path="/register" element={<Register language={language} />} />
         <Route path="/Analysis" element={<Analysis language={language} />} />
         <Route path="/edit-records" element={<EditRecords language={language} />} />
+        <Route path="/profile" element={<Profile/>}/>
+        <Route path="/verify-email" element={<VerifyEmail/>}/>
 
       </Routes>
       {!isAdminRoute && <Footer language={language} />}

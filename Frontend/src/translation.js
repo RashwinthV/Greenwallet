@@ -21,7 +21,7 @@ const translations = {
     login: "Log In",
     loginSuccess: "Login successful!",
     loginFailed: "Login failed. Please check your details.",
-    passwordlab:"password must be 6 digit long",
+    passwordlab: "Password must be 6 digits long",
 
     profit: "Profit",
     loss: "Loss",
@@ -41,8 +41,7 @@ const translations = {
     date: "Date",
     analysis: "Analysis",
 
-
-    // **Months**
+    // Months
     allMonths: "All Months",
     january: "January",
     february: "February",
@@ -57,7 +56,7 @@ const translations = {
     november: "November",
     december: "December",
 
-    // **Entry Component Translations**
+    // Entry Component
     addRecord: "Add Record",
     type: "Type",
     product: "Product",
@@ -67,12 +66,16 @@ const translations = {
     recordAdded: "Record added successfully!",
     recordFailed: "Failed to add record.",
     fetchError: "Failed to load products.",
-
-    // **New Translations**
     selectCategory: "Select a Category",
     consumable: "Consumable",
     fertilizer: "Fertilizer",
-    pesticides: "Pesticides",
+    pesticide: "Pesticide",
+
+    // New Additions
+    rate: "Rate",
+    kgsOrQty: "Kgs / Quantity",
+    enterWork: "Enter work",
+    selectProductError: "Please select a product before submitting!",
   },
 
   ta: {
@@ -97,10 +100,7 @@ const translations = {
     login: "உள்நுழையவும்",
     loginSuccess: "உள்நுழைவு வெற்றிகரமாக முடிந்தது!",
     loginFailed: "உள்நுழைவு தோல்வியடைந்தது. தயவுசெய்து விவரங்களை சரிபார்க்கவும்.",
-    passwordlab:"கடவுச்சொல் 6 இலக்கங்கள் கொண்டதாக இருக்க வேண்டும்",
-    analysis: "ஆய்வு",
-
-
+    passwordlab: "கடவுச்சொல் 6 இலக்கங்கள் கொண்டதாக இருக்க வேண்டும்",
 
     profit: "லாபம்",
     loss: "நஷ்டம்",
@@ -118,8 +118,9 @@ const translations = {
     expense: "செலவு",
     description: "விளக்கம்",
     date: "தேதி",
+    analysis: "ஆய்வு",
 
-    // **Months**
+    // Months
     allMonths: "அனைத்து மாதங்களும்",
     january: "ஜனவரி",
     february: "பிப்ரவரி",
@@ -134,7 +135,7 @@ const translations = {
     november: "நவம்பர்",
     december: "டிசம்பர்",
 
-    // **Entry Component Translations**
+    // Entry Component
     addRecord: "பதிவு சேர்க்கவும்",
     type: "வகை",
     product: "தயாரிப்பு",
@@ -144,12 +145,16 @@ const translations = {
     recordAdded: "பதிவு வெற்றிகரமாக சேர்க்கப்பட்டது!",
     recordFailed: "பதிவு சேர்ப்பதில் தோல்வி.",
     fetchError: "தயாரிப்புகளை ஏற்ற முடியவில்லை.",
-
-    // **New Translations**
     selectCategory: "ஒரு வகையை தேர்வு செய்யவும்",
     consumable: "நுகர்ப்பொருள்",
     fertilizer: "உரம்",
-    pesticides: "பூச்சிக்கொல்லி",
+    pesticide: "பூச்சிக்கொல்லி",
+
+    // New Additions
+    rate: "தொகை",
+    kgsOrQty: "கிலோகிராம் / அளவு",
+    enterWork: "வேலையை உள்ளிடவும்",
+    selectProductError: "சமர்ப்பிப்பதற்கு முன் தயாரிப்பை தேர்வு செய்யவும்!",
   },
 };
 

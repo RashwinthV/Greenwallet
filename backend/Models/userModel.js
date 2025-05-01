@@ -39,6 +39,19 @@ const userSchema = new mongoose.Schema({
     enum: ['male', 'female', 'other'],
     required: [true, 'Gender is required'],
   },
+  emailverified:{
+    type:Boolean,
+    default:false
+  },
+  verificationCode: {
+    type: String,
+    default: null,
+  },
+  otpExpiresAt: {
+    type: Date,
+    default: null,
+  },
+  
 }, { timestamps: true });
 
 const User = mongoose.model('user', userSchema);

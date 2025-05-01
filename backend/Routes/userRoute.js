@@ -5,6 +5,7 @@ const authMiddleware = require("../middleware/Authorize");
 const { getRecords, editrecords, Deleterecord } = require("../Controller/historyController");
 const { Validity } = require("../middleware/Verify");
 const { RateAnalysis, getRecordsWithProducts } = require("../Controller/AnalysisController");
+const { SendVerifyemail, Verifyemail } = require("../Controller/Email/VerifyEmail");
 
 const userRoute = express.Router();
 
@@ -23,6 +24,10 @@ userRoute.get("/verify-token",Validity)
 userRoute.get('/rates/:id',authMiddleware,RateAnalysis)
 userRoute.get('/product/:id',authMiddleware,getRecordsWithProducts)
 
+//email route
+userRoute.post("/send-verification-email/:id",authMiddleware,SendVerifyemail)
+userRoute.post('/verify-email/:id',authMiddleware,Verifyemail)
+ 
 
 
 module.exports = userRoute;

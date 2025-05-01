@@ -7,7 +7,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import translations from "../translation";
 import {Link} from 'react-router-dom'
 import MonthFilter from "../components/filter";
-import LoadingSpinner from "../components/Loadong";
+import LoadingSpinner from "../components/Loading/Loadong";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
