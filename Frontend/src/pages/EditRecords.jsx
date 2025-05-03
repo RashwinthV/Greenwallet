@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { FaEdit, FaTrash } from "react-icons/fa"; // ✅ Import icons
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { Modal, Button } from "react-bootstrap"; // ✅ Bootstrap Modal
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function EditRecords() {
   const [records, setRecords] = useState([]);
@@ -8,6 +10,9 @@ function EditRecords() {
   const [formData, setFormData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 8;
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false); // ✅ Modal state
+  const [recordToDelete, setRecordToDelete] = useState(null); // ✅ To track which record to delete
 
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
@@ -69,12 +74,15 @@ function EditRecords() {
     setFormData({});
   };
 
-  const handleDelete = async (recordId) => {
-    if (!window.confirm("Are you sure you want to delete this record?")) return;
+  const confirmDelete = (recordId) => {
+    setRecordToDelete(recordId);
+    setShowDeleteModal(true);
+  };
 
+  const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_BACKEND_URI}/user/delete-record/${userId}/${recordId}`,
+        `${import.meta.env.VITE_BACKEND_URI}/user/delete-record/${userId}/${recordToDelete}`,
         {
           withCredentials: true,
           headers: {
@@ -86,6 +94,9 @@ function EditRecords() {
       if (response.data?.records) {
         setRecords(response.data.records);
       }
+
+      setShowDeleteModal(false);
+      setRecordToDelete(null);
     } catch (err) {
       console.error("Error deleting record", err);
     }
@@ -98,7 +109,7 @@ function EditRecords() {
   const totalPages = Math.ceil(records.length / recordsPerPage);
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-4 vh-100">
       <h2 className="mb-4 text-center">Edit Records</h2>
 
       <div className="table-responsive">
@@ -227,14 +238,14 @@ function EditRecords() {
                         <td>
                           <div className="d-flex justify-content-center gap-2">
                             <button
-                              className="btn btn-primary "
+                              className="btn btn-primary"
                               onClick={() => handleEdit(record)}
                             >
                               <FaEdit />
                             </button>
                             <button
                               className="btn btn-danger"
-                              onClick={() => handleDelete(record._id)}
+                              onClick={() => confirmDelete(record._id)}
                             >
                               <FaTrash />
                             </button>
@@ -272,6 +283,24 @@ function EditRecords() {
           </button>
         </div>
       )}
+
+      {/* ✅ Delete Confirmation Modal */}
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Are you sure you want to delete this record?</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDelete}>
+            Yes, Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

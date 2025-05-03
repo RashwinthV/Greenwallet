@@ -98,7 +98,7 @@ const Entry = ({ language, id }) => {
       <ToastContainer position="top-right" autoClose={3000} />
       <h2 className="text-center">{translations[language]?.addRecord}</h2>
 
-      <form onSubmit={handleSubmit} className="p-4 border rounded bg-light">
+      <form className="p-4 border rounded bg-light">
         <div className="mb-3">
           <label className="form-label">{translations[language]?.date}</label>
           <input
@@ -234,6 +234,7 @@ const Entry = ({ language, id }) => {
                 {products.map((product) => (
                   <li key={product._id}>
                     <button
+                    type="button"
                       className="dropdown-item d-flex align-items-center"
                       onClick={() => handleSelect(product)}
                     >
@@ -256,7 +257,7 @@ const Entry = ({ language, id }) => {
           </div>
         )}
 
-        <button type="submit" className="btn btn-primary w-100">
+        <button onClick={handleSubmit} className="btn btn-primary w-100">
           {translations[language]?.submit}
         </button>
       </form>

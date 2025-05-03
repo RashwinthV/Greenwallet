@@ -119,12 +119,18 @@ const Dashboard = ({ language }) => {
     .filter((t) => t.type === "expense")
     .reduce((acc, t) => acc + t.amount, 0);
 
-  const totalKgs = filteredTransactions.reduce((acc, t) => {
+  const totalKg = filteredTransactions.reduce((acc, t) => {
     if (t.productCategory === "consumable") {
       return acc + (t.kgs || 0);
     }
     return acc;
   }, 0);
+
+  const tons = Math.floor(totalKg / 1000);
+  const remainingKg = totalKg % 1000;
+  const totalKgs=`${tons>0? `${tons} tons` : ""} ${remainingKg} kg`
+  
+  
 
   const netTotal = totalIncome - totalExpense;
   const status =
@@ -314,7 +320,7 @@ const Dashboard = ({ language }) => {
           {filteredTransactions.length > 0 && (
             <div className="mt-3 text-center">
               <p>
-                <strong>Total Kgs: {totalKgs.toFixed(2)} kg</strong>
+                <strong>Total Kgs: {totalKgs}</strong>
               </p>
               <p className="text-success">
                 <strong>{translations[language].income}: ₹{totalIncome.toFixed(2)}</strong>

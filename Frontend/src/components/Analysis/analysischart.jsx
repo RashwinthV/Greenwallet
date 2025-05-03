@@ -12,6 +12,7 @@ import {
   TimeScale,
 } from "chart.js";
 import "chartjs-adapter-date-fns";
+import MonthFilter from "../filter"; // Update this import path if needed
 
 ChartJS.register(
   CategoryScale,
@@ -24,8 +25,9 @@ ChartJS.register(
   TimeScale
 );
 
-const RateECGChart = ({ records }) => {
+const RateECGChart = ({ records, language = "en" }) => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [selectedMonth, setSelectedMonth] = useState("");
 
   const availableYears = useMemo(() => {
     const years = new Set();
@@ -42,54 +44,53 @@ const RateECGChart = ({ records }) => {
       .sort((a, b) => new Date(a.date) - new Date(b.date));
   }, [records]);
 
-  const limitMonthlyData = (data) => {
-    const monthGrouped = {};
-    let maxCount = 0;
-
-    data.forEach((r) => {
-      const month = new Date(r.date).getMonth();
-      if (!monthGrouped[month]) monthGrouped[month] = [];
-      monthGrouped[month].push(r);
-    });
-
-    const limited = Object.values(monthGrouped).flatMap((entries) => {
-      maxCount = Math.max(maxCount, entries.length);
-      if (entries.length <= 10) return entries;
-      const step = Math.floor(entries.length / 10);
-      return entries.filter((_, i) => i % step === 0).slice(0, 10);
-    });
-
-    return { limited, maxCount };
+  const generateColor = (index, total) => {
+    const hue = (index * 360) / total;
+    return `hsl(${hue}, 70%, 50%)`;
   };
 
-  const { limited, maxCount } = useMemo(() => {
-    if (!selectedYear) return { limited: [], maxCount: 0 };
+  const filteredRecords = useMemo(() => {
+    if (!selectedYear) return [];
 
-    const filteredData = sortedRecords.filter(
-      (r) => new Date(r.date).getFullYear() === Number(selectedYear)
-    );
+    const filtered = sortedRecords.filter((r) => {
+      
+      const date = new Date(r.date);
+      const yearMatches = date.getFullYear() === Number(selectedYear);
+      const monthMatches =
+        selectedMonth === "" || selectedMonth === "none"
+          ? true
+          : date.getMonth() === parseInt(selectedMonth, 10) - 1;
+      return yearMatches && monthMatches;
+    });
 
-    return limitMonthlyData(filteredData);
-  }, [selectedYear, sortedRecords]);
+    return filtered;
+  }, [selectedYear, selectedMonth, sortedRecords]);
 
+  const recordsByProduct = useMemo(() => {
+    const grouped = {};
+    filteredRecords.forEach((r) => {
+      
+      const key = r.productName || "Unknown Product";
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push({ x: r.alignedDate, y: r.rate });
+    });
+    return grouped;
+  }, [filteredRecords]);
+
+  
   const datasets = useMemo(() => {
-    if (!limited || limited.length === 0) return [];
+    const total = Object.keys(recordsByProduct).length;
 
-    return [
-      {
-        label: `Rate ${selectedYear}`,
-        data: limited.map((r) => ({
-          x: r.alignedDate,
-          y: r.rate,
-        })),
-        borderColor: "#007bff",
-        backgroundColor: "#007bff",
-        borderWidth: 2,
-        pointRadius: 2,
-        tension: 0,
-      },
-    ];
-  }, [limited, selectedYear]);
+    return Object.entries(recordsByProduct).map(([product, data], i) => ({
+      label: product,
+      data,
+      borderColor: generateColor(i, total),
+      backgroundColor: generateColor(i, total),
+      borderWidth: 2,
+      pointRadius: 2,
+      tension: 0.3,
+    }));
+  }, [recordsByProduct]);
 
   const chartData = {
     datasets,
@@ -128,11 +129,13 @@ const RateECGChart = ({ records }) => {
     },
   };
 
+  // Reset filters
   const handleReset = () => {
     setSelectedYear(new Date().getFullYear());
+    setSelectedMonth("");
   };
 
-  const dynamicChartWidth = Math.max(900, maxCount * 100);
+  const dynamicChartWidth = Math.max(900, filteredRecords.length * 100);
 
   return (
     <div
@@ -143,9 +146,10 @@ const RateECGChart = ({ records }) => {
         color: "#333",
         boxShadow: "0 0 10px rgba(0,0,0,0.1)",
       }}
+      className="h-90"
     >
       <div className="d-flex flex-wrap align-items-center justify-content-between mb-3 gap-3">
-        <h4 className="m-0">📊  Rate Analysis</h4>
+        <h4 className="m-0">📊 Rate Analysis</h4>
         <div className="d-flex gap-2 flex-wrap">
           <select
             className="form-select form-select-sm"
@@ -159,6 +163,16 @@ const RateECGChart = ({ records }) => {
               </option>
             ))}
           </select>
+
+          <MonthFilter
+            transactions={records}
+            selectedYear={selectedYear}
+            selectedMonth={selectedMonth}
+            setSelectedMonth={setSelectedMonth}
+            setFilteredTransactions={() => {}}
+            language={language}
+          />
+
           <button className="btn btn-outline-dark btn-sm" onClick={handleReset}>
             Reset
           </button>
@@ -172,7 +186,7 @@ const RateECGChart = ({ records }) => {
           </div>
         </div>
       ) : (
-        <p className="text-muted">Select a year to display data.</p>
+        <p className="text-muted">No data available for selected filters.</p>
       )}
     </div>
   );
