@@ -28,8 +28,10 @@ const Register = ({ language }) => {
         formData
       );
       setMessage(response.data.message);
+      
       if (response) navigate("/login");
-    } catch (error) {
+    } catch (error) {      console.log(error.response.data);
+
       setMessage(error.response?.data?.message || "Error registering user");
     }
   };

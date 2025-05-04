@@ -30,7 +30,7 @@ const Footer = ({ language }) => {
           <div className="col-md-6 text-start">
             <h5 className="text-uppercase fw-bold">Green Wallet</h5>
             <p className="mt-2 mb-0 text-light">
-              &copy; 2024 Green Wallet. {texts[language].rights}
+              &copy; Since 2024  {texts[language].rights}
             </p>
           </div>
 

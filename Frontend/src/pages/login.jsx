@@ -1,9 +1,9 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import translations from "../translation";
-// import AuthContext from "../context/Authcontextt";
 
 function Login({ language }) {
   const [email, setEmail] = useState("");
@@ -79,7 +79,7 @@ function Login({ language }) {
                 className="btn btn-outline-secondary rounded-end-pill"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? "🙈" : "👁️"}
+                {showPassword ? <FaEyeSlash/> : <FaEye/>}
               </button>
             </div>
           </div>

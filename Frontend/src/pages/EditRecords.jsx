@@ -5,14 +5,18 @@ import { Modal, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Dropdown } from "react-bootstrap";
 import translations from "../translation";
+import MonthFilter from "../components/filter";
 
 function EditRecords() {
   const [records, setRecords] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
   const [formData, setFormData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [products, setproduct] = useState([]);
-  const t = translations[localStorage.getItem("language")]; 
+  const [products, setProduct] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); 
+  const [selectedMonth, setSelectedMonth] = useState("none");
+  const [filteredRecords, setFilteredRecords] = useState([]);
+  const t = translations[localStorage.getItem("language")];
   const recordsPerPage = 8;
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -22,10 +26,7 @@ function EditRecords() {
   const user = storedUser ? JSON.parse(storedUser) : null;
   const userId = user?._id || "";
 
- 
- 
- 
- useEffect(() => {
+  useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_BACKEND_URI}/user/records/${userId}`, {
         withCredentials: true,
@@ -36,11 +37,33 @@ function EditRecords() {
       .then((res) => {
         if (res.data) {
           setRecords(res.data.records || []);
-          setproduct(res.data.products || []);
+          setProduct(res.data.products || []);
+          setFilteredRecords(res.data.records || []); // Set initial records to filtered
         }
       })
       .catch((err) => console.error("Error fetching records", err));
   }, [userId]);
+
+  useEffect(() => {
+    let filtered = records;
+
+    if (selectedMonth && selectedMonth !== "none") {
+      filtered = filtered.filter((record) => {
+        const recordDate = new Date(record.date);
+        return (
+          recordDate.getFullYear() === selectedYear &&
+          recordDate.getMonth() === parseInt(selectedMonth, 10) - 1
+        );
+      });
+    } else {
+      filtered = filtered.filter((record) => {
+        const recordDate = new Date(record.date);
+        return recordDate.getFullYear() === selectedYear;
+      });
+    }
+
+    setFilteredRecords(filtered);
+  }, [selectedMonth, selectedYear, records]);
 
   const handleEdit = (record) => {
     setEditingIndex(record._id);
@@ -72,6 +95,7 @@ function EditRecords() {
 
       if (res.data?.records) {
         setRecords(res.data.records);
+        setFilteredRecords(res.data.records);
       }
 
       setEditingIndex(null);
@@ -107,6 +131,7 @@ function EditRecords() {
 
       if (response.data?.records) {
         setRecords(response.data.records);
+        setFilteredRecords(response.data.records);
       }
 
       setShowDeleteModal(false);
@@ -127,20 +152,72 @@ function EditRecords() {
   const formatForInput = (dateStr) => {
     if (!dateStr) return "";
     const date = new Date(dateStr);
-    return date.toISOString().split("T")[0]; // returns 'yyyy-MM-dd'
+    return date.toISOString().split("T")[0];
   };
 
   // Pagination
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = records.slice(indexOfFirstRecord, indexOfLastRecord);
-  const totalPages = Math.ceil(records.length / recordsPerPage);
+  const currentRecords = filteredRecords.slice(
+    indexOfFirstRecord,
+    indexOfLastRecord
+  );
+  const totalPages = Math.ceil(filteredRecords.length / recordsPerPage);
+
+  const handleReset = () => {
+    setSelectedYear(new Date().getFullYear());
+    setSelectedMonth("none");
+  };
 
   return (
-    <div className="container mt-4 vh-100">
+    <div className="container mt-4 " style={{ marginBottom: "200px" }}>
       <h2 className="mb-4 text-center">{t.EditRecords}</h2>
 
-      <div className="table-responsive">
+      {/* {filters} */}
+      <div className="d-flex justify-content-around mb-3" >
+        {/* Year Filter */}
+        <div className="d-flex justify-content-between mb-3">
+          <label htmlFor="year" className="me-2">
+            {t.selectYear}
+          </label>
+          <select
+            id="year"
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(Number(e.target.value))}
+            className="form-select"
+          >
+            {[...Array(5).keys()].map((i) => {
+              const year = new Date().getFullYear() - i;
+              return (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+        {/* Filters */}
+        <div className="d-flex justify-content-between mb-3">
+          <MonthFilter
+            transactions={records}
+            setFilteredTransactions={setFilteredRecords}
+            language={localStorage.getItem("language")}
+            selectedYear={selectedYear}
+            setSelectedMonth={setSelectedMonth}
+            selectedMonth={selectedMonth}
+          />
+        </div>
+
+        <button
+          className="btn bg-dark hover:bg-grey text-white  btn-sm"
+          style={{ height: "40px" }}
+          onClick={handleReset}
+        >
+          Reset
+        </button>
+      </div>
+      {/* record table */}
+      <div className="table-responsive mx-auto">
         <table className="table table-bordered table-striped align-middle text-center">
           <thead className="table-dark">
             <tr>
@@ -254,7 +331,6 @@ function EditRecords() {
                         ) : (
                           <>
                             <td></td>
-
                             <td>
                               <input
                                 type="number"
@@ -341,7 +417,7 @@ function EditRecords() {
       </div>
 
       {/* Pagination */}
-      {records.length > recordsPerPage && (
+      {filteredRecords.length > recordsPerPage && (
         <div className="d-flex justify-content-center align-items-center mt-3 p-2">
           <button
             className="btn btn-outline-secondary mx-2"
@@ -351,7 +427,8 @@ function EditRecords() {
             {t.prev}
           </button>
           <span>
-            {t.page} <strong>{currentPage}</strong> {t.of} <strong>{totalPages}</strong>
+            {t.page} <strong>{currentPage}</strong> {t.of}{" "}
+            <strong>{totalPages}</strong>
           </span>
           <button
             className="btn btn-outline-secondary mx-2"

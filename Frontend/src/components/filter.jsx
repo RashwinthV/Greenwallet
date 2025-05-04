@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Dropdown } from "react-bootstrap";
 import translations from "../translation";
 import '../styles/filter.css';
@@ -7,9 +7,9 @@ const MonthFilter = ({
   transactions,
   setFilteredTransactions,
   language,
-  selectedYear, // ✅ receive selectedYear from parent
-  setSelectedMonth, // ✅ controlled from Dashboard
-  selectedMonth     // ✅ controlled from Dashboard
+  selectedYear, 
+  setSelectedMonth,
+  selectedMonth    
 }) => {
   const months = [
     { value: "none", label: translations[language]?.none || "None" },
@@ -54,8 +54,8 @@ const MonthFilter = ({
         {months.find((m) => m.value === selectedMonth)?.label || "Select Month"}
       </Dropdown.Toggle>
 
-      <Dropdown.Menu style={{ maxHeight: "200px", overflowY: "auto" }}>
-        {months.slice(0, 6).map((month) => (
+      <Dropdown.Menu style={{ maxHeight: "150px", overflowY: "auto" }}>
+        {months.map((month) => (
           <Dropdown.Item
             key={month.value}
             onClick={() => handleMonthChange(month.value)}
@@ -63,16 +63,7 @@ const MonthFilter = ({
             {month.label}
           </Dropdown.Item>
         ))}
-        <div style={{ maxHeight: "120px", overflowY: "auto" }}>
-          {months.slice(6).map((month) => (
-            <Dropdown.Item
-              key={month.value}
-              onClick={() => handleMonthChange(month.value)}
-            >
-              {month.label}
-            </Dropdown.Item>
-          ))}
-        </div>
+       
       </Dropdown.Menu>
     </Dropdown>
   );

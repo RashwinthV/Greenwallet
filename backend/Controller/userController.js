@@ -1,4 +1,5 @@
 const User = require("../Models/userModel");
+const bcrypt = require("bcryptjs");
 
 exports.register = async (req, res) => {
   try {
@@ -24,8 +25,10 @@ exports.register = async (req, res) => {
     if (!["male", "female", "other"].includes(gender.toLowerCase())) {
       return res.status(400).json({ message: "Invalid gender. Choose from 'male', 'female', or 'other'." });
     }
-
-    const newUser = new User({ name, email, password, phoneNo, age, gender });
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const pass = hashedPassword;
+    const newUser = new User({ name, email, password:pass, phoneNo, age, gender });
     await newUser.save();
 
     res.status(201).json({ message: "User registered successfully!" });

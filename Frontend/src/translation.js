@@ -86,7 +86,9 @@ const translations = {
   confirmDeletion: "Confirm Deletion",
   deleteRecord: "Are you sure you want to delete this record?",
   yesDelete: "Yes, Delete",
-  actions: "Actions"
+  actions: "Actions",
+  analysis:"Analysis",
+  noRecordsFound:" No records Found"
 
   },
 
@@ -177,7 +179,9 @@ const translations = {
     confirmDeletion: "அழிப்பதை உறுதி செய்யவும்",
     deleteRecord: "இந்த பதிவை அழிக்க நீங்கள் உறுதியாக இருக்கிறீர்களா?",
     yesDelete: "ஆம், அழிக்கவும்",
-    actions: "செயலிகள்"
+    actions: "செயலிகள்",
+    analysis:"பகுப்பாய்வு",
+    noRecordsFound:" பதிவுகள் இல்லை",
   },
 };
 

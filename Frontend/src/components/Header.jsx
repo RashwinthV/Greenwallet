@@ -7,6 +7,7 @@ import { MdAdminPanelSettings } from "react-icons/md";
 import { toast } from "react-toastify";
 import "../styles/Header.css";
 import LoginLoader from "./Loading/loginLoader";
+import translations from "../translation";
 
 const Header = ({ language, setLanguage }) => {
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
@@ -157,7 +158,7 @@ const Header = ({ language, setLanguage }) => {
               </li>
               <li className="nav-item">
                 <Link className="nav-link" to="/analysis" onClick={closeNavbar}>
-                  {texts[language].analysis || "Analysis"}
+                  {translations[language].analysis}
                 </Link>
               </li>
 
@@ -196,8 +197,8 @@ const Header = ({ language, setLanguage }) => {
                   id="languageDropdown"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
-                >
-                  {texts[language].language}
+                ><img width="30" height="30" src="https://img.icons8.com/nolan/64/google-translate.png" alt="google-translate"/>
+                  {/* {texts[language].language} */}
                 </button>
                 <ul
                   className="dropdown-menu"
@@ -242,8 +243,8 @@ const Header = ({ language, setLanguage }) => {
               id="languageDropdownMobile"
               data-bs-toggle="dropdown"
               aria-expanded="false"
-            >
-              {texts[language].language}
+            ><img width="30" height="30" src="https://img.icons8.com/nolan/64/google-translate.png" alt="google-translate"/>
+              {/* {texts[language].language} */}
             </button>
             <ul
               className="dropdown-menu dropdown-menu-end"
