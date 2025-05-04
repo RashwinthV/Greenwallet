@@ -96,13 +96,14 @@ const Dashboard = ({ language }) => {
     }
   }, [selectedYear, selectedMonth, transactions, filterMode]);
 
-  const handleMonthChange = (month) => {
-    if (selectedYear === "none" || filteredTransactions.length === 0) {
-      setSelectedMonth("none");
-    } else {
-      setSelectedMonth(month);
-    }
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
   };
+  
 
   const handleNoneClick = () => {
     setFilterMode("none");
@@ -264,7 +265,7 @@ const Dashboard = ({ language }) => {
           <h4>
             {translations[language]?.transactionHistory || "Transaction History"}
           </h4>
-          <Link to={"/edit-records"} className="mx-auto bg-danger rounded text-white p-2 " style={{textDecoration:"none",marginBottom:"10px"}}>Edit Records</Link>
+          <Link to={"/edit-records"} className="mx-auto bg-danger rounded text-white p-2 " style={{textDecoration:"none",marginBottom:"10px"}}>{translations[language].EditRecords}</Link>
         </div>
           
           <div
@@ -274,9 +275,9 @@ const Dashboard = ({ language }) => {
               <thead>
                 <tr>
                   <th>{translations[language].date}</th>
-                  <th>Rate (₹/kg)</th>
-                  <th>Kgs / quantity</th>
-                  <th>Product</th>
+                  <th>{translations[language].rate} (₹/kg)</th>
+                  <th>{translations[language].kgsOrQty}</th>
+                  <th>{translations[language].product}</th>
                   <th>{translations[language].income} (₹)</th>
                   <th>{translations[language].expense} (₹)</th>
                 </tr>
@@ -285,9 +286,8 @@ const Dashboard = ({ language }) => {
                 {filteredTransactions.length > 0 ? (
                   filteredTransactions.map((transaction) => (
                   <tr key={transaction._id || transaction.id}>
-                      <td>
-                        {new Date(transaction.date).toLocaleDateString()}
-                      </td>
+                     <td>{formatDate(transaction.date)}</td>
+
                       <td>₹{transaction.rate || "N/A"}</td>
                       <td>{transaction.kgs || "N/A"}</td>
                       <td>{transaction.productName || "N/A"}</td>

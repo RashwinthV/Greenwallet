@@ -21,31 +21,46 @@ exports.getRecords = async (req, res) => {
     }
 
     const formattedRecords = await Promise.all(
-      userRecords.    
-      records.map(async (record) => {
-        let productDetails = record.productId;
-
-        if (!productDetails || !productDetails.name) {
-          productDetails = await Product.findById(record.productId).select(
-            "name type category price"
-          );
-        }
-
-        return {
-          _id: record._id,
-          date: record.date,
-          rate: record.rate,
-          kgs: record.kgs,
-          amount: record.amount,
-          type: record.type,
-          productId: productDetails?._id || null,
-          productName: productDetails?.name || record?.Expense,
-          productCategory: productDetails?.category || "Work",
-        };
+      userRecords.records
+      .sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+      
+        const yearDiff = dateA.getFullYear() - dateB.getFullYear();
+        if (yearDiff !== 0) return yearDiff;
+      
+        const monthDiff = dateA.getMonth() - dateB.getMonth();
+        if (monthDiff !== 0) return monthDiff;
+      
+        return dateA - dateB; // Fallback: ascending by day
       })
+      
+        .map(async (record) => {
+          let productDetails = record.productId;
+    
+          if (!productDetails || !productDetails.name) {
+            productDetails = await Product.findById(record.productId).select(
+              "name type category price"
+            );
+          }
+    
+          return {
+            _id: record._id,
+            date: record.date,
+            rate: record.rate,
+            kgs: record.kgs,
+            amount: record.amount,
+            type: record.type,
+            productId: productDetails?._id || null,
+            productName: productDetails?.name || record?.Expense,
+            productCategory: productDetails?.category || "Work",
+          };
+        })
     );
+    const Products=await Product.find({},"name category image")
+    
 
-    res.json({ success: true, records: formattedRecords });
+    res.json({ success: true, records: formattedRecords,products:Products });
     
   } catch (error) {
     console.error("❌ Error fetching transactions:", error);
@@ -158,15 +173,58 @@ exports.editrecords = async (req, res) => {
         },
       },
       { new: true }
-    );
+    ).populate("records.productId");
 
     if (!result) {
       return res.status(404).json({ error: "Record not found" });
     }
 
+    const records = await Promise.all(
+      result.records
+        .sort((a, b) => {
+          const dateA = new Date(a.date);
+          const dateB = new Date(b.date);
+      
+          const yearDiff = dateA.getFullYear() - dateB.getFullYear();
+          if (yearDiff !== 0) return yearDiff;
+      
+          const monthDiff = dateA.getMonth() - dateB.getMonth();
+          if (monthDiff !== 0) return monthDiff;
+      
+          return dateA - dateB; // Fallback: ascending by day
+        })
+        .map(async (record) => {
+          try {
+            const Products = await Product.findById(record.productId, "name");
+            return {
+              _id: record._id,
+              date: record.date,
+              rate: record.rate,
+              kgs: record.kgs,
+              amount: record.amount,
+              type: record.type,
+              productId: record.productId,
+              productName: Products ? Products.name : "Unknown Product", // Return a clearer fallback name
+            };
+          } catch (err) {
+            console.error(`Error fetching product for record ${record._id}:`, err);
+            return {
+              _id: record._id,
+              date: record.date,
+              rate: record.rate,
+              kgs: record.kgs,
+              amount: record.amount,
+              type: record.type,
+              productId: record.productId,
+              productName: "Product Not Found", // Clearer error message
+            };
+          }
+        })
+    );
+    
     res.status(200).json({
       message: "Record updated successfully",
-      updated: result,
+      records,
     });
   } catch (err) {
     console.error("Error updating record:", err);

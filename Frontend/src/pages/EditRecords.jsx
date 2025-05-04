@@ -1,24 +1,31 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { Modal, Button } from "react-bootstrap"; // ✅ Bootstrap Modal
+import { Modal, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Dropdown } from "react-bootstrap";
+import translations from "../translation";
 
 function EditRecords() {
   const [records, setRecords] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
   const [formData, setFormData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
+  const [products, setproduct] = useState([]);
+  const t = translations[localStorage.getItem("language")]; 
   const recordsPerPage = 8;
 
-  const [showDeleteModal, setShowDeleteModal] = useState(false); // ✅ Modal state
-  const [recordToDelete, setRecordToDelete] = useState(null); // ✅ To track which record to delete
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [recordToDelete, setRecordToDelete] = useState(null);
 
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
   const userId = user?._id || "";
 
-  useEffect(() => {
+ 
+ 
+ 
+ useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_BACKEND_URI}/user/records/${userId}`, {
         withCredentials: true,
@@ -27,7 +34,10 @@ function EditRecords() {
         },
       })
       .then((res) => {
-        if (res.data) setRecords(res.data.records || []);
+        if (res.data) {
+          setRecords(res.data.records || []);
+          setproduct(res.data.products || []);
+        }
       })
       .catch((err) => console.error("Error fetching records", err));
   }, [userId]);
@@ -47,8 +57,10 @@ function EditRecords() {
 
   const handleSave = async () => {
     try {
-      await axios.put(
-        `${import.meta.env.VITE_BACKEND_URI}/user/edit-record/${userId}/${editingIndex}`,
+      const res = await axios.put(
+        `${
+          import.meta.env.VITE_BACKEND_URI
+        }/user/edit-record/${userId}/${editingIndex}`,
         formData,
         {
           withCredentials: true,
@@ -58,12 +70,12 @@ function EditRecords() {
         }
       );
 
-      const updated = records.map((rec) =>
-        rec._id === editingIndex ? formData : rec
-      );
+      if (res.data?.records) {
+        setRecords(res.data.records);
+      }
 
-      setRecords(updated);
       setEditingIndex(null);
+      setFormData({});
     } catch (err) {
       console.error("Error saving record", err);
     }
@@ -82,7 +94,9 @@ function EditRecords() {
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_BACKEND_URI}/user/delete-record/${userId}/${recordToDelete}`,
+        `${
+          import.meta.env.VITE_BACKEND_URI
+        }/user/delete-record/${userId}/${recordToDelete}`,
         {
           withCredentials: true,
           headers: {
@@ -102,6 +116,20 @@ function EditRecords() {
     }
   };
 
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  const formatForInput = (dateStr) => {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    return date.toISOString().split("T")[0]; // returns 'yyyy-MM-dd'
+  };
+
   // Pagination
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
@@ -110,26 +138,27 @@ function EditRecords() {
 
   return (
     <div className="container mt-4 vh-100">
-      <h2 className="mb-4 text-center">Edit Records</h2>
+      <h2 className="mb-4 text-center">{t.EditRecords}</h2>
 
       <div className="table-responsive">
         <table className="table table-bordered table-striped align-middle text-center">
           <thead className="table-dark">
             <tr>
-              <th>Date</th>
-              <th>Type</th>
-              <th>Income</th>
-              <th>Expense</th>
-              <th>Rate</th>
-              <th>Kgs</th>
-              <th>Actions</th>
+              <th>{t.date}</th>
+              <th>{t.type}</th>
+              <th>{t.product}</th>
+              <th>{t.income}</th>
+              <th>{t.expense}</th>
+              <th>{t.rate}</th>
+              <th>{t.kgsOrQty}</th>
+              <th>{t.actions}</th>
             </tr>
           </thead>
           <tbody>
             {currentRecords.length === 0 ? (
               <tr>
                 <td colSpan="7" className="text-center text-muted py-4">
-                  No records found.
+                  {t.noRecordsFound}
                 </td>
               </tr>
             ) : (
@@ -146,10 +175,11 @@ function EditRecords() {
                             type="date"
                             name="date"
                             className="form-control"
-                            value={formData.date?.substring(0, 10)}
+                            value={formatForInput(formData.date)}
                             onChange={handleChange}
                           />
                         </td>
+
                         <td>
                           <select
                             name="type"
@@ -157,10 +187,57 @@ function EditRecords() {
                             value={formData.type}
                             onChange={handleChange}
                           >
-                            <option value="expense">Expense</option>
-                            <option value="income">Income</option>
+                            <option value="expense">{t.expense}</option>
+                            <option value="income">{t.income}</option>
                           </select>
                         </td>
+
+                        <td>
+                          <Dropdown>
+                            <Dropdown.Toggle
+                              variant="outline-secondary"
+                              className="w-100"
+                            >
+                              {formData.productName
+                                ? products.find(
+                                    (p) => p._id === formData.productName
+                                  )?.name
+                                : t.selectProduct}
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu
+                              style={{
+                                maxHeight: "200px",
+                                overflowY: "auto",
+                                width: "110%",
+                              }}
+                            >
+                              {products.map((product) => (
+                                <Dropdown.Item
+                                  key={product._id}
+                                  onClick={() =>
+                                    setFormData((prev) => ({
+                                      ...prev,
+                                      productId: product._id,
+                                    }))
+                                  }
+                                >
+                                  <img
+                                    src={product.image}
+                                    style={{
+                                      borderRadius: "5px",
+                                      width: "20px",
+                                      height: "20px",
+                                    }}
+                                  ></img>
+                                  {"   "}
+                                  {product.name}
+                                </Dropdown.Item>
+                              ))}
+                            </Dropdown.Menu>
+                          </Dropdown>
+                        </td>
+
                         {formData.type === "income" ? (
                           <>
                             <td>
@@ -177,6 +254,7 @@ function EditRecords() {
                         ) : (
                           <>
                             <td></td>
+
                             <td>
                               <input
                                 type="number"
@@ -212,21 +290,22 @@ function EditRecords() {
                               className="btn btn-success btn-sm"
                               onClick={handleSave}
                             >
-                              Save
+                              {t.save}
                             </button>
                             <button
                               className="btn btn-secondary btn-sm"
                               onClick={handleCancel}
                             >
-                              Cancel
+                              {t.cancel}
                             </button>
                           </div>
                         </td>
                       </>
                     ) : (
                       <>
-                        <td>{new Date(record.date).toLocaleDateString()}</td>
+                        <td>{formatDate(record.date)}</td>
                         <td>{record.type}</td>
+                        <td>{record.productName}</td>
                         <td className={isIncome ? "text-success fw-bold" : ""}>
                           {isIncome ? record.amount : ""}
                         </td>
@@ -269,35 +348,39 @@ function EditRecords() {
             onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
             disabled={currentPage === 1}
           >
-            Prev
+            {t.prev}
           </button>
           <span>
-            Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+            {t.page} <strong>{currentPage}</strong> {t.of} <strong>{totalPages}</strong>
           </span>
           <button
             className="btn btn-outline-secondary mx-2"
             onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
             disabled={currentPage === totalPages}
           >
-            Next
+            {t.next}
           </button>
         </div>
       )}
 
-      {/* ✅ Delete Confirmation Modal */}
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
+      {/* Delete Confirmation Modal */}
+      <Modal
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+        centered
+      >
         <Modal.Header closeButton>
-          <Modal.Title>Confirm Deletion</Modal.Title>
+          <Modal.Title>{t.confirmDeletion}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Are you sure you want to delete this record?</p>
+          <p>{t.deleteRecord}</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-            Cancel
+            {t.cancel}
           </Button>
           <Button variant="danger" onClick={handleDelete}>
-            Yes, Delete
+            {t.yesDelete}
           </Button>
         </Modal.Footer>
       </Modal>

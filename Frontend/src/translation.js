@@ -76,6 +76,18 @@ const translations = {
     kgsOrQty: "Kgs / Quantity",
     enterWork: "Enter work",
     selectProductError: "Please select a product before submitting!",
+    EditRecords:"Edit Records",
+    save: "Save",
+  cancel: "Cancel",
+  prev: "Prev",
+  next: "Next",
+  page: "Page",
+  of: "of",
+  confirmDeletion: "Confirm Deletion",
+  deleteRecord: "Are you sure you want to delete this record?",
+  yesDelete: "Yes, Delete",
+  actions: "Actions"
+
   },
 
   ta: {
@@ -155,6 +167,17 @@ const translations = {
     kgsOrQty: "கிலோகிராம் / அளவு",
     enterWork: "வேலையை உள்ளிடவும்",
     selectProductError: "சமர்ப்பிப்பதற்கு முன் தயாரிப்பை தேர்வு செய்யவும்!",
+    EditRecords:"பதிவுகளைத் திருத்து",
+    save: "சேமி",
+    cancel: "ரத்து செய்",
+    prev: "முந்தையது",
+    next: "அடுத்தது",
+    page: "பக்கம்",
+    of: "இல்",
+    confirmDeletion: "அழிப்பதை உறுதி செய்யவும்",
+    deleteRecord: "இந்த பதிவை அழிக்க நீங்கள் உறுதியாக இருக்கிறீர்களா?",
+    yesDelete: "ஆம், அழிக்கவும்",
+    actions: "செயலிகள்"
   },
 };
 
