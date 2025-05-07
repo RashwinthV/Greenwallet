@@ -37,7 +37,7 @@ const VerifyEmail = () => {
       const email = user.email;
 
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URI}/user/verify-email/${userId}`,
+        `${import.meta.env.VITE_BACKEND_URI}/user/mail/verify-email/${userId}`,
         { email, otp },
         { headers: { Authorization: `Bearer ${token}` } }
       );

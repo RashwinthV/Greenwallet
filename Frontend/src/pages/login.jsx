@@ -1,14 +1,18 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import translations from "../translation";
 
+import ModalWrapper from "../components/models/wrapper";
+import ForgotPassword from "../components/Password/Forgerpassword";
+
 function Login({ language }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showForgotModal, setShowForgotModal] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -17,12 +21,12 @@ function Login({ language }) {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URI}/login`,
         { email, password },
-        { withCredentials: true } 
+        { withCredentials: true }
       );
 
-      const user = res.data.user; 
-      localStorage.setItem("user",JSON.stringify(user))
-      localStorage.setItem("token",res.data.token)
+      const user = res.data.user;
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", res.data.token);
 
       if (res.status === 200) {
         toast.success(translations[language].loginSuccess);
@@ -40,10 +44,7 @@ function Login({ language }) {
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-      <div
-        className="card p-5 shadow-lg"
-        style={{ height: "450px", width: "500px", borderRadius: "12px" }}
-      >
+      <div className="card p-5 shadow-lg" style={{ width: "500px", borderRadius: "12px" }}>
         <h3 className="text-center mb-4 text-primary">
           {translations[language].login}
         </h3>
@@ -61,6 +62,7 @@ function Login({ language }) {
               placeholder={translations[language].enterEmail}
             />
           </div>
+
           <div className="mb-3">
             <label className="form-label fw-semibold">
               {translations[language].password}
@@ -79,10 +81,20 @@ function Login({ language }) {
                 className="btn btn-outline-secondary rounded-end-pill"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? <FaEyeSlash/> : <FaEye/>}
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+            <div className="text-end mt-2">
+              <button
+                type="button"
+                className="btn btn-link p-0"
+                onClick={() => setShowForgotModal(true)}
+              >
+                Forgot Password?
               </button>
             </div>
           </div>
+
           <button
             className="btn btn-primary w-100 rounded-pill p-2 fs-5"
             type="submit"
@@ -90,15 +102,18 @@ function Login({ language }) {
             {translations[language].login}
           </button>
         </form>
+
         <p className="text-center mt-4">
           {translations[language].dontHaveAccount}
-          <Link to={"/register"}
-            className="text-decoration-none text-primary fw-semibold"
-          >
+          <Link to="/register" className="text-decoration-none text-primary fw-semibold">
             {translations[language].signUp}
           </Link>
         </p>
       </div>
+
+      <ModalWrapper show={showForgotModal} onClose={() => setShowForgotModal(false)}>
+        <ForgotPassword onClose={() => setShowForgotModal(false)} />
+      </ModalWrapper>
     </div>
   );
 }

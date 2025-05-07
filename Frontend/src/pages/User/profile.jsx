@@ -22,7 +22,7 @@ const Profile = () => {
       const userId=user._id;
       
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URI}/user/send-verification-email/${userId}`,
+        `${import.meta.env.VITE_BACKEND_URI}/user/mail/send-verification-email/${userId}`,
         {email: user.email},
         { headers: { Authorization: `Bearer ${token}` } }
       );
