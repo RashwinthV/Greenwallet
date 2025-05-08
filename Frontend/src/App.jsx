@@ -61,7 +61,7 @@ function App() {
         <Route path="/register" element={<Register language={language} />} />
         <Route path="/Analysis" element={<Analysis language={language} />} />
         <Route path="/edit-records" element={<EditRecords language={language} />} />
-        <Route path="/profile" element={<Profile/>} language={language}/>
+        <Route path="/profile" element={<Profile language={language} />} />
         <Route path="/verify-email" element={<VerifyEmail/>}/>
 
       </Routes>

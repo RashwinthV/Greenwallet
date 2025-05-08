@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { BsCheckCircle } from "react-icons/bs"; // For the success check mark
 import useAuth from "../../Hooks/useAuth";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const translations = {
   en: {
@@ -28,7 +29,7 @@ const translations = {
     currentPwd: "தற்போதைய கடவுச்சொல்",
     newPwd: "புதிய கடவுச்சொல்",
     confirmPwd: "புதிய கடவுச்சொல்லை உறுதிப்படுத்தவும்",
-    verifyBtn: "சரிபார்க்கவும்",
+    verifyBtn: "சரிபார்த்து சமர்ப்பிக்கவும்",
     cancel: "ரத்து செய்க",
     updateBtn: "கடவுச்சொல்லை புதுப்பிக்கவும்",
     errorIncorrect: "தவறான தற்போதைய கடவுச்சொல்",
@@ -54,12 +55,14 @@ const {user}=useAuth()
 
   const sendmail = async () => {
     try {
-        console.log("yes");
         
       const token = localStorage.getItem("token");
       const userId = user._id;
-  console.log("user",user);
-  
+      const verified=user.emailverified;
+
+     if(verified===false){
+      toast.error("Please verify your email before changing password")
+     }
       await axios.post(
         `${import.meta.env.VITE_BACKEND_URI}/user/mail/passwordupdate-info/${userId}`,
         { email: user.email },
@@ -184,7 +187,7 @@ const {user}=useAuth()
             />
           </div>
           {error && <div className="text-danger">{error}</div>}
-          <button type="submit" className="btn btn-danger me-2">
+          <button type="submit" className="btn btn-danger  me-2">
             {t.verifyBtn}
           </button>
           <button

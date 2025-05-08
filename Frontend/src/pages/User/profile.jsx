@@ -3,14 +3,18 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Password from "../../components/Password/newPassword";
+import translation from "../../translation"
 
 const Profile = () => {
   const [user, setUser] = useState(null);
+  // const [language, setLanguage] = useState("en");
   const [verifying, setVerifying] = useState(false);
   const navigate=useNavigate()
+      const language=localStorage.getItem("language")
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
+
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
@@ -59,13 +63,13 @@ const Profile = () => {
         <div className="card-body">
           {/* Name */}
           <div className="row mb-3">
-            <div className="col-sm-4 fw-bold">Name:</div>
+            <div className="col-sm-4 fw-bold">{translation[language].name} :</div>
             <div className="col-sm-8">{user.name}</div>
           </div>
 
           {/* Email */}
           <div className="row mb-3">
-            <div className="col-sm-4 fw-bold">Email:</div>
+            <div className="col-sm-4 fw-bold">{translation[language].email}:</div>
             <div className="col-sm-8 d-flex align-items-center justify-content-between">
               <span>{user.email}</span>
               {!user.emailverified && (
@@ -82,31 +86,31 @@ const Profile = () => {
 
           {/* Email Verified Status */}
           <div className="row mb-3">
-            <div className="col-sm-4 fw-bold">Email Verified:</div>
+            <div className="col-sm-4 fw-bold">{translation[language].EmailVerified} :</div>
             <div className="col-sm-8">
               {user.emailverified ? (
-                <span className="text-success">Yes</span>
+                <span className="text-success">{translation[language].yes}</span>
               ) : (
-                <span className="text-danger">No</span>
+                <span className="text-danger">{translation[language].no}</span>
               )}
             </div>
           </div>
 
           {/* Phone Number */}
           <div className="row mb-3">
-            <div className="col-sm-4 fw-bold">Phone Number:</div>
+            <div className="col-sm-4 fw-bold">{translation[language].phoneNo} :</div>
             <div className="col-sm-8">{user.phoneNo}</div>
           </div>
 
           {/* Age */}
           <div className="row mb-3">
-            <div className="col-sm-4 fw-bold">Age:</div>
+            <div className="col-sm-4 fw-bold">{translation[language].age} :</div>
             <div className="col-sm-8">{user.age}</div>
           </div>
 
           {/* Gender */}
           <div className="row mb-3">
-            <div className="col-sm-4 fw-bold">Gender:</div>
+            <div className="col-sm-4 fw-bold">{translation[language].gender} :</div>
             <div className="col-sm-8 text-capitalize">{user.gender}</div>
           </div>
         </div>
