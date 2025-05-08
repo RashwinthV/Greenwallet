@@ -6,7 +6,8 @@ const { getRecords, editrecords, Deleterecord } = require("../Controller/history
 const { Validity } = require("../middleware/Verify");
 const { RateAnalysis, getRecordsWithProducts } = require("../Controller/AnalysisController");
 const { SendVerifyemail, Verifyemail } = require("../Controller/Email/VerifyEmail");
-const sendPasswordEmail = require("../Controller/Email/Password");
+const { password } = require("../Controller/loginController");
+const{ sendPasswordEmail, PasswordUpdateInfo}=require('../Controller/Email/Password')
 
 const userRoute = express.Router();
 
@@ -29,6 +30,11 @@ userRoute.get('/product/:id',authMiddleware,getRecordsWithProducts)
 userRoute.post("/mail/send-verification-email/:id",authMiddleware,SendVerifyemail)
 userRoute.post('/mail/verify-email/:id',authMiddleware,Verifyemail)
 userRoute.post('/mail/reset-password',sendPasswordEmail)
+userRoute.post('/mail/passwordupdate-info/:id',authMiddleware,PasswordUpdateInfo)
+
+//get password
+userRoute.post('/verify-password/:id',authMiddleware,password)
+userRoute.put('/password/:id',authMiddleware,password)
  
 
 

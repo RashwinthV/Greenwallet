@@ -24,7 +24,7 @@ const generateRandomPassword = (length = 10) => {
   return password.sort(() => Math.random() - 0.5).join("");
 };
 
-const sendPasswordEmail = async (req, res) => {
+exports.sendPasswordEmail = async (req, res) => {
   const { email } = req.body;
 
   if (!email) return res.status(400).json({ message: "Email is required" });
@@ -40,15 +40,14 @@ const sendPasswordEmail = async (req, res) => {
     const plainPassword = generateRandomPassword(10);
     const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
-    // Save to DB
     await User.updateOne({ email }, { password: hashedPassword });
 
     // Mail configuration
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_APP_MAILID, 
-        pass: process.env.EMAIL_APP_PASSWORD,      
+        user: process.env.EMAIL_APP_MAILID,
+        pass: process.env.EMAIL_APP_PASSWORD,
       },
     });
 
@@ -83,4 +82,55 @@ const sendPasswordEmail = async (req, res) => {
   }
 };
 
-module.exports = sendPasswordEmail;
+exports.PasswordUpdateInfo = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) return res.status(400).json({ message: "Email is required" });
+
+  const user = await User.findOne({ email: email });
+  if (!user)
+    return res
+      .status(404)
+      .json({ message: "Please enter your registered email ID" });
+
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_APP_MAILID,
+        pass: process.env.EMAIL_APP_PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: `"Green Wallet" <${process.env.EMAIL_APP_MAILID}>`,
+      to: user.email,
+      subject: "Your Password Was Recently Updated",
+      text: `Hi ${user.name},
+
+This is a confirmation that your password was successfully updated.
+
+If you did not initiate this change, please contact our support team immediately.
+
+Regards,
+Green Wallet Team`,
+      html: `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+          <h2 style="color: #333;">Password Updated Successfully</h2>
+          <p>Hi ${user.name},</p>
+          <p>This is a confirmation that your password was <strong>successfully updated</strong>.</p>
+          <p>If you did not make this change, please contact our support team immediately using the Email ${process.env.EMAIL_APP_MAILID} .</p>
+          <p>Regards,<br/>Green Wallet Team</p>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    return res
+      .status(200)
+      .json({ message: "Password update email sent successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Error sending email", error });
+  }
+};
+

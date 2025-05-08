@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import Password from "../../components/Password/newPassword";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -49,57 +50,73 @@ const Profile = () => {
       </div>
     );
   }
+  
 
   return (
-<div className="container mt-4 vh-100">
-<h2 className="mb-4">User Profile</h2>
-      <div className="card shadow-sm p-4">
-        <div className="row mb-3">
-          <div className="col-sm-4 fw-bold">Name:</div>
-          <div className="col-sm-8">{user.name}</div>
-        </div>
+    <div className="container mt-4 mb-5 ">
+      <h2 className="mb-4 text-center">User Profile</h2>
+      <div className="card shadow-lg p-4 border-0 rounded-3">
+        <div className="card-body">
+          {/* Name */}
+          <div className="row mb-3">
+            <div className="col-sm-4 fw-bold">Name:</div>
+            <div className="col-sm-8">{user.name}</div>
+          </div>
 
-        <div className="row mb-3">
-          <div className="col-sm-4 fw-bold">Email:</div>
-          <div className="col-sm-8 d-flex align-items-center justify-content-between">
-            <span>{user.email}</span>
-            {!user.emailverified && (
-              <button
-                className="btn btn-sm btn-outline-success"
-                onClick={handleVerifyEmail}
-                disabled={verifying}
-              >
-                {verifying ? "Sending..." : "Verify Email"}
-              </button>
-            )}
+          {/* Email */}
+          <div className="row mb-3">
+            <div className="col-sm-4 fw-bold">Email:</div>
+            <div className="col-sm-8 d-flex align-items-center justify-content-between">
+              <span>{user.email}</span>
+              {!user.emailverified && (
+                <button
+                  className="btn btn-sm btn-outline-success"
+                  onClick={handleVerifyEmail}
+                  disabled={verifying}
+                >
+                  {verifying ? "Sending..." : "Verify Email"}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Email Verified Status */}
+          <div className="row mb-3">
+            <div className="col-sm-4 fw-bold">Email Verified:</div>
+            <div className="col-sm-8">
+              {user.emailverified ? (
+                <span className="text-success">Yes</span>
+              ) : (
+                <span className="text-danger">No</span>
+              )}
+            </div>
+          </div>
+
+          {/* Phone Number */}
+          <div className="row mb-3">
+            <div className="col-sm-4 fw-bold">Phone Number:</div>
+            <div className="col-sm-8">{user.phoneNo}</div>
+          </div>
+
+          {/* Age */}
+          <div className="row mb-3">
+            <div className="col-sm-4 fw-bold">Age:</div>
+            <div className="col-sm-8">{user.age}</div>
+          </div>
+
+          {/* Gender */}
+          <div className="row mb-3">
+            <div className="col-sm-4 fw-bold">Gender:</div>
+            <div className="col-sm-8 text-capitalize">{user.gender}</div>
           </div>
         </div>
 
-        <div className="row mb-3">
-          <div className="col-sm-4 fw-bold">Phone Number:</div>
-          <div className="col-sm-8">{user.phoneNo}</div>
-        </div>
+        
+      </div>
 
-        <div className="row mb-3">
-          <div className="col-sm-4 fw-bold">Age:</div>
-          <div className="col-sm-8">{user.age}</div>
-        </div>
-
-        <div className="row mb-3">
-          <div className="col-sm-4 fw-bold">Gender:</div>
-          <div className="col-sm-8 text-capitalize">{user.gender}</div>
-        </div>
-
-        <div className="row mb-3">
-          <div className="col-sm-4 fw-bold">Email Verified:</div>
-          <div className="col-sm-8">
-            {user.emailverified ? (
-              <span className="text-success">Yes</span>
-            ) : (
-              <span className="text-danger">No</span>
-            )}
-          </div>
-        </div>
+      {/* Password Change Section */}
+      <div className="mt-4">
+        <Password  />
       </div>
     </div>
   );

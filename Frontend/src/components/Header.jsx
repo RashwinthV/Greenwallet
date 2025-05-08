@@ -1,20 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { MdAdminPanelSettings } from "react-icons/md";
-import { toast } from "react-toastify";
 import "../styles/Header.css";
-import LoginLoader from "./Loading/loginLoader";
 import translations from "../translation";
 
-const Header = ({ language, setLanguage }) => {
+const Header = ({ language, setLanguage,user,  logout }) => {
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true); // loader state
-
   const texts = {
     en: {
       admin: "Admin",
@@ -38,55 +31,6 @@ const Header = ({ language, setLanguage }) => {
     },
   };
 
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem("language");
-    if (savedLanguage) setLanguage(savedLanguage);
-
-    const storedUser = localStorage.getItem("user");
-    const users = storedUser ? JSON.parse(storedUser) : null;
-    setUser(users);
-
-    const verifyToken = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setLoading(false); // done loading
-        return;
-      }
-
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URI}/user/verify-token`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        if (response.data?.user) {
-          setIsLoggedIn(true);
-        } else {
-          handleSessionExpiry();
-        }
-      } catch (error) {
-        console.error("Token verification failed", error);
-      } finally {
-        setLoading(false); // done loading
-      }
-    };
-
-    verifyToken();
-  }, [setLanguage]);
-
-  const handleSessionExpiry = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    setUser(null);
-    setIsLoggedIn(false);
-    toast.info("Your session has expired. Please log in again.");
-    setTimeout(() => {
-      window.location.href = "/login";
-    }, 1500);
-  };
-
   const handleLanguageChange = (lang) => {
     setLanguage(lang);
     localStorage.setItem("language", lang);
@@ -94,11 +38,7 @@ const Header = ({ language, setLanguage }) => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    setUser(null);
-    setIsLoggedIn(false);
-    toast.success("You have been logged out.");
+    logout();
   };
 
   const closeNavbar = () => {
@@ -106,7 +46,8 @@ const Header = ({ language, setLanguage }) => {
     document.getElementById("navbarNav")?.classList.remove("show");
   };
 
-  if (loading) return <LoginLoader />;
+
+
 
   return (
     <>
@@ -162,7 +103,7 @@ const Header = ({ language, setLanguage }) => {
                 </Link>
               </li>
 
-              {isLoggedIn ? (
+              {user  ? (
                 <>
                   <li className="d-flex align-items-center">
                     <Link
@@ -301,7 +242,7 @@ const Header = ({ language, setLanguage }) => {
                 </li>
               )}
 
-              {isLoggedIn ? (
+              {user  ? (
                 <>
                   <li>
                     <Link className="dropdown-item" to="/profile">

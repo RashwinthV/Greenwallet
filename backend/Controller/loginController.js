@@ -50,3 +50,43 @@ exports.cokieesave=async (req,res)=>{
     res.status(401).json({ message: "Invalid token" });
   }
 }
+
+ 
+exports.password = async (req, res) => {
+  const { id } = req.params;
+  const { currentPassword, newPassword } = req.body;
+  
+
+  try {
+    const user = await User.findById(id).select("password");
+    
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // If only currentPassword is provided: just verify
+    if (currentPassword && !newPassword) {
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      return res.json({ match: isMatch });
+    }
+
+    if (newPassword) {
+      const isSame = await bcrypt.compare(newPassword, user.password);
+      if (isSame) {
+        return res.json({ same: true });
+      }
+          const hashedPassword = await bcrypt.hash(newPassword, 10);
+      user.password = hashedPassword;
+      await user.save();
+    
+      return res.json({ match: true, message: "Password updated successfully" });
+    }
+    
+
+    return res.status(400).json({ message: "Invalid request" });
+  } catch (error) {
+    console.error("Password error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};

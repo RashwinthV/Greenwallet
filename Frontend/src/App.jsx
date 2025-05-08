@@ -12,32 +12,21 @@ import Entry from "./pages/Entry";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import Analysis from "./pages/Analysis";
-import LoadingSpinner from "./components/Loading/Loadong";
 import EditRecords from "./pages/EditRecords";
 import Profile from "./pages/User/profile";
 import VerifyEmail from "./components/verifyEmail";
+import useAuth from"./Hooks/UseAuth";
+import LoginLoader from "./components/Loading/loginLoader";
 
 function App() {
   const [language, setLanguage] = useState("en");
-  const [id, setId] = useState(null);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
+  const {logout, user, loading } = useAuth(); 
+  const id=user?._id
+
 
   const isAdminRoute = location.pathname.startsWith("/Admin");
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        const userObject = JSON.parse(storedUser);
-        setId(userObject._id);
-      }
-      setLoading(false);
-    }, 1000); 
-
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     if (isAdminRoute) {
@@ -49,14 +38,14 @@ function App() {
   if (loading) {
     return (
       <div style={{ height: "100vh", backgroundColor: "#f8f9fa" }}>
-        <LoadingSpinner />
+        <LoginLoader />
       </div>
     );
   }
 
   return (
     <>
-      {!isAdminRoute && <Header language={language} setLanguage={setLanguage} id={id} />}
+      {!isAdminRoute && <Header language={language} setLanguage={setLanguage} user={user}  logout={logout}/>}
       <ToastContainer />
       <Routes>
         <Route path="/" element={<Body language={language} />} />
@@ -72,7 +61,7 @@ function App() {
         <Route path="/register" element={<Register language={language} />} />
         <Route path="/Analysis" element={<Analysis language={language} />} />
         <Route path="/edit-records" element={<EditRecords language={language} />} />
-        <Route path="/profile" element={<Profile/>}/>
+        <Route path="/profile" element={<Profile/>} language={language}/>
         <Route path="/verify-email" element={<VerifyEmail/>}/>
 
       </Routes>
