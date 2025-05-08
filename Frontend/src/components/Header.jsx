@@ -6,7 +6,7 @@ import { MdAdminPanelSettings } from "react-icons/md";
 import "../styles/Header.css";
 import translations from "../translation";
 
-const Header = ({ language, setLanguage,user,  logout }) => {
+const Header = ({ language, setLanguage, user, logout }) => {
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
   const texts = {
     en: {
@@ -46,9 +46,6 @@ const Header = ({ language, setLanguage,user,  logout }) => {
     document.getElementById("navbarNav")?.classList.remove("show");
   };
 
-
-
-
   return (
     <>
       {/* Desktop / Tablet Navbar */}
@@ -74,7 +71,6 @@ const Header = ({ language, setLanguage,user,  logout }) => {
             id="navbarNav"
           >
             <ul className="navbar-nav ms-auto gap-3">
-              
               {user?.role === "admin" && (
                 <li className="nav-item">
                   <Link className="nav-link" to="/Admin" onClick={closeNavbar}>
@@ -103,15 +99,16 @@ const Header = ({ language, setLanguage,user,  logout }) => {
                 </Link>
               </li>
 
-              {user  ? (
+              {user ? (
                 <>
                   <li className="d-flex align-items-center">
                     <Link
-                      className="nav-item d-flex align-items-center " style={{textDecoration:"none", color:"grey"}}
+                      className="nav-item d-flex align-items-center "
+                      style={{ textDecoration: "none", color: "grey" }}
                       to="/profile"
                     >
                       <i className="bi bi-person-circle fs-5 mx-2"></i>
-                     Profile
+                      Profile
                     </Link>
                   </li>
 
@@ -138,7 +135,13 @@ const Header = ({ language, setLanguage,user,  logout }) => {
                   id="languageDropdown"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
-                ><img width="30" height="30" src="https://img.icons8.com/nolan/64/google-translate.png" alt="google-translate"/>
+                >
+                  <img
+                    width="30"
+                    height="30"
+                    src="https://img.icons8.com/nolan/64/google-translate.png"
+                    alt="google-translate"
+                  />
                   {/* {texts[language].language} */}
                 </button>
                 <ul
@@ -184,7 +187,13 @@ const Header = ({ language, setLanguage,user,  logout }) => {
               id="languageDropdownMobile"
               data-bs-toggle="dropdown"
               aria-expanded="false"
-            ><img width="30" height="30" src="https://img.icons8.com/nolan/64/google-translate.png" alt="google-translate"/>
+            >
+              <img
+                width="30"
+                height="30"
+                src="https://img.icons8.com/nolan/64/google-translate.png"
+                alt="google-translate"
+              />
               {/* {texts[language].language} */}
             </button>
             <ul
@@ -242,7 +251,7 @@ const Header = ({ language, setLanguage,user,  logout }) => {
                 </li>
               )}
 
-              {user  ? (
+              {user ? (
                 <>
                   <li>
                     <Link className="dropdown-item" to="/profile">
@@ -281,6 +290,9 @@ const Header = ({ language, setLanguage,user,  logout }) => {
         </Link>
         <Link to="/entry" className="text-white text-center">
           <i className="bi bi-pencil-square fs-4"></i>
+        </Link>
+        <Link to="/notification" className="text-white text-center">
+          <i className="bi bi-bell fs-4"></i>{" "}
         </Link>
         <Link to="/analysis" className="text-white text-center">
           <i className="bi bi-graph-up fs-4"></i>

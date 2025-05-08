@@ -17,6 +17,7 @@ import Profile from "./pages/User/profile";
 import VerifyEmail from "./components/verifyEmail";
 import useAuth from"./Hooks/useAuth";
 import LoginLoader from "./components/Loading/loginLoader";
+import Notification from "./pages/User/Notification";
 
 function App() {
   const [language, setLanguage] = useState("en");
@@ -62,6 +63,7 @@ function App() {
         <Route path="/Analysis" element={<Analysis language={language} />} />
         <Route path="/edit-records" element={<EditRecords language={language} />} />
         <Route path="/profile" element={<Profile language={language} />} />
+        <Route path="/notification" element={<Notification language={language} />} />
         <Route path="/verify-email" element={<VerifyEmail/>}/>
 
       </Routes>

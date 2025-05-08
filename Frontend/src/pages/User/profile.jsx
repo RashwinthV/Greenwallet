@@ -3,14 +3,14 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Password from "../../components/Password/newPassword";
-import translation from "../../translation"
+import translation from "../../translation";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   // const [language, setLanguage] = useState("en");
   const [verifying, setVerifying] = useState(false);
-  const navigate=useNavigate()
-      const language=localStorage.getItem("language")
+  const navigate = useNavigate();
+  const language = localStorage.getItem("language");
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -24,18 +24,19 @@ const Profile = () => {
     setVerifying(true);
     try {
       const token = localStorage.getItem("token");
-      const userId=user._id;
-      
+      const userId = user._id;
+
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URI}/user/mail/send-verification-email/${userId}`,
-        {email: user.email},
+        `${
+          import.meta.env.VITE_BACKEND_URI
+        }/user/mail/send-verification-email/${userId}`,
+        { email: user.email },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (response.data.success) {
         toast.success("Verification email sent!");
-        navigate("/verify-email")
-
+        navigate("/verify-email");
       } else {
         toast.error("Failed to send verification email");
       }
@@ -45,7 +46,6 @@ const Profile = () => {
       setVerifying(false);
     }
   };
-  
 
   if (!user) {
     return (
@@ -54,7 +54,6 @@ const Profile = () => {
       </div>
     );
   }
-  
 
   return (
     <div className="container mt-4 mb-5 ">
@@ -63,14 +62,16 @@ const Profile = () => {
         <div className="card-body">
           {/* Name */}
           <div className="row mb-3">
-            <div className="col-sm-4 fw-bold">{translation[language].name} :</div>
-            <div className="col-sm-8">{user.name}</div>
+            <div className="col-12 d-flex align-items-center gap-2 flex-wrap">
+              <span className="fw-bold">{translation[language].name} :</span>
+              <span>{user.name}</span>
+            </div>
           </div>
 
           {/* Email */}
           <div className="row mb-3">
-            <div className="col-sm-4 fw-bold">{translation[language].email}:</div>
-            <div className="col-sm-8 d-flex align-items-center justify-content-between">
+            <div className="col-12 d-flex align-items-center gap-2 flex-wrap">
+              <span className="fw-bold">{translation[language].email} : </span>
               <span>{user.email}</span>
               {!user.emailverified && (
                 <button
@@ -86,41 +87,49 @@ const Profile = () => {
 
           {/* Email Verified Status */}
           <div className="row mb-3">
-            <div className="col-sm-4 fw-bold">{translation[language].EmailVerified} :</div>
-            <div className="col-sm-8">
-              {user.emailverified ? (
-                <span className="text-success">{translation[language].yes}</span>
+          <div className="col-12 d-flex align-items-center gap-2 flex-wrap">
+          <span className="fw-bold">{translation[language]?.EmailVerified} : {" "} </span>
+              {user?.emailverified ? (
+                <span className="text-success fw-bold mx-2">
+                  {translation[language]?.yes}
+                </span>
               ) : (
-                <span className="text-danger">{translation[language].no}</span>
+                <span className="text-danger fw-bold mx-2">{translation[language]?.no}</span>
               )}
             </div>
           </div>
 
           {/* Phone Number */}
           <div className="row mb-3">
-            <div className="col-sm-4 fw-bold">{translation[language].phoneNo} :</div>
-            <div className="col-sm-8">{user.phoneNo}</div>
+            <div className="col-12 d-flex align-items-center gap-2 flex-wrap">
+              <span className="fw-bold">
+                {translation[language].phoneNo} : {" "}
+              </span>
+              <span> {user.phoneNo} </span>
+            </div>
           </div>
 
           {/* Age */}
           <div className="row mb-3">
-            <div className="col-sm-4 fw-bold">{translation[language].age} :</div>
-            <div className="col-sm-8">{user.age}</div>
+            <div className="col-12 d-flex align-items-center gap-2 flex-wrap">
+              <span className="fw-bold"> {translation[language].age} : </span>
+              <span> {user.age} </span>
+            </div>
           </div>
 
           {/* Gender */}
           <div className="row mb-3">
-            <div className="col-sm-4 fw-bold">{translation[language].gender} :</div>
-            <div className="col-sm-8 text-capitalize">{user.gender}</div>
+            <div className="col-12 d-flex align-items-center gap-2 flex-wrap">
+              <span className="fw-bold"> {translation[language].gender} : </span>
+              <span> {user.gender}</span>
+            </div>
           </div>
         </div>
-
-        
       </div>
 
       {/* Password Change Section */}
       <div className="mt-4">
-        <Password  />
+        <Password />
       </div>
     </div>
   );
