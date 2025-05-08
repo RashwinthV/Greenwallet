@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BsCheckCircle } from "react-icons/bs"; // For the success check mark
-import useAuth from "../../Hooks/UseAuth";
+import useAuth from "../../Hooks/useAuth";
 import axios from "axios";
 
 const translations = {
