@@ -15,7 +15,7 @@ import Analysis from "./pages/Analysis";
 import EditRecords from "./pages/EditRecords";
 import Profile from "./pages/User/profile";
 import VerifyEmail from "./components/verifyEmail";
-import useAuth from"./Hooks/UseAuth";
+import useAuth from"./Hooks/useAuth";
 import LoginLoader from "./components/Loading/loginLoader";
 
 function App() {
