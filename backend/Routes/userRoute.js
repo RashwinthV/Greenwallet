@@ -1,6 +1,6 @@
 const express = require("express");
 const { register } = require("../Controller/userController");
-const { getProducts, addRecord } = require("../Controller/productConroller");
+const { getProducts, addRecord, allproducts } = require("../Controller/productConroller");
 const authMiddleware = require("../middleware/Authorize");
 const {
   getRecords,
@@ -29,6 +29,7 @@ userRoute.post("/register", register);
 userRoute.get("/products/:id/:category", authMiddleware, getProducts);
 userRoute.post("/record/:id", authMiddleware, addRecord);
 userRoute.get("/records/:id", authMiddleware, getRecords);
+userRoute.get('/products',allproducts)
 
 userRoute.put("/edit-record/:id/:recordId", authMiddleware, editrecords);
 userRoute.delete("/delete-record/:id/:recordId", authMiddleware, Deleterecord);

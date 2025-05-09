@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ProductRequest from "../components/productRequest";
 import "../styles/Body.css"
+import AvailableProducts from "../components/product/aviableProucts";
 
 const vegetableData = {
   en: [
@@ -101,32 +102,11 @@ const Body = ({ language }) => {
         </button>
       )}
       {showform && <ProductRequest closeForm={closeForm} />}{" "}
-      {/* Pass closeForm to ProductRequest */}
-      <div className="body-container text-white py-5">
-        <div className="container text-center">
-          <h1 className="display-4 fw-bold">
-            {language === "en"
-              ? "Healthy Vegetables"
-              : "ஆரோக்கியமான காய்கறிகள்"}
-          </h1>
-          <p className="lead">
-            {language === "en"
-              ? "Eat fresh, stay healthy!"
-              : "பசுமையாக உணவும், ஆரோக்கியமாக இருங்கள்!"}
-          </p>
 
-          <div className="row mt-4">
-            {vegetableData[language].map((veg, index) => (
-              <div key={index} className="col-lg-4 col-md-6 col-sm-12 mb-4">
-                <div className="card bg-dark text-light shadow-lg">
-                  <div className="card-body">
-                    <h3 className="card-title text-warning">{veg.name}</h3>
-                    <p className="card-text">{veg.benefits}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+      <div className="body-container text-white py-5">
+        
+        <div className="container text-center">
+          <AvailableProducts/>
         </div>
       </div>
     </div>

@@ -87,3 +87,13 @@ exports.addRecord = async (req, res) => {
       .json({ success: false, message: "Failed to create record." });
   }
 };
+
+exports.allproducts=async(req,res)=>{
+  try {
+    const products = await Product.find();
+    res.json(products);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+}

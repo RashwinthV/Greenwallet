@@ -167,7 +167,11 @@ const Header = ({ language, setLanguage, user, logout }) => {
                 </ul>
               </li>
               <li className="nav-item">
-              <Link to="/notification" className="text-white text-center">
+                <Link
+                  to="/notification"
+                  className="nav-item d-flex align-items-center "
+                  style={{ textDecoration: "none", color: "grey" }}
+                >
                   <i className="bi bi-bell fs-4"></i>{" "}
                 </Link>
               </li>
