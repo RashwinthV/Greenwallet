@@ -7,7 +7,6 @@ import translation from "../../translation";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
-  // const [language, setLanguage] = useState("en");
   const [verifying, setVerifying] = useState(false);
   const navigate = useNavigate();
   const language = localStorage.getItem("language");

@@ -36,13 +36,14 @@ function App() {
     }
   }, [isAdminRoute, navigate]);
 
-  if (loading) {
+  if (loading && location.pathname === "/") {
     return (
       <div style={{ height: "100vh", backgroundColor: "#f8f9fa" }}>
         <LoginLoader />
       </div>
     );
   }
+  
 
   return (
     <>

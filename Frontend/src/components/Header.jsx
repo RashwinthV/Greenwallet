@@ -166,6 +166,11 @@ const Header = ({ language, setLanguage, user, logout }) => {
                   </li>
                 </ul>
               </li>
+              <li className="nav-item">
+              <Link to="/notification" className="text-white text-center">
+                  <i className="bi bi-bell fs-4"></i>{" "}
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

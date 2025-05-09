@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { BsCheckCircle } from "react-icons/bs"; // For the success check mark
+import { BsCheckCircle } from "react-icons/bs";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import useAuth from "../../Hooks/useAuth";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -49,22 +50,26 @@ function NewPassword() {
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-const {user}=useAuth()
+  const { user } = useAuth();
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const lang = localStorage.getItem("language") || "en";
   const t = translations[lang];
 
   const sendmail = async () => {
     try {
-        
       const token = localStorage.getItem("token");
       const userId = user._id;
-      const verified=user.emailverified;
+      const verified = user.emailverified;
 
-     if(verified===false){
-      toast.error("Please verify your email before changing password")
-     }
+      if (verified === false) {
+        toast.error("Please verify your email before changing password");
+      }
       await axios.post(
-        `${import.meta.env.VITE_BACKEND_URI}/user/mail/passwordupdate-info/${userId}`,
+        `${
+          import.meta.env.VITE_BACKEND_URI
+        }/user/mail/passwordupdate-info/${userId}`,
         { email: user.email },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -73,7 +78,7 @@ const {user}=useAuth()
       setError(t.passfail);
     }
   };
-  
+
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -141,7 +146,7 @@ const {user}=useAuth()
         setError(t.samePassword);
       } else if (data?.match) {
         setSuccess(true);
-        sendmail()
+        sendmail();
         setStep("start");
         setFormData({
           currentPassword: "",
@@ -175,17 +180,29 @@ const {user}=useAuth()
       {step === "verify" && (
         <form className="mt-4" onSubmit={handleVerifySubmit}>
           <p>{t.confirmMsg}</p>
-          <div className="mb-3">
+          <div className="mb-3 position-relative">
             <label className="form-label">{t.currentPwd}</label>
             <input
-              type="password"
+              type={showCurrentPassword ? "text" : "password"}
               name="currentPassword"
               className="form-control"
               value={formData.currentPassword}
               onChange={handleInputChange}
               required
             />
+            <span
+              onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "38px",
+                cursor: "pointer",
+              }}
+            >
+              {showCurrentPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
           </div>
+
           {error && <div className="text-danger">{error}</div>}
           <button type="submit" className="btn btn-danger  me-2">
             {t.verifyBtn}
@@ -210,28 +227,52 @@ const {user}=useAuth()
 
       {step === "change" && (
         <form className="mt-4" onSubmit={handlePasswordChange}>
-          <div className="mb-3">
+          <div className="mb-3 position-relative">
             <label className="form-label">{t.newPwd}</label>
             <input
-              type="password"
+              type={showNewPassword ? "text" : "password"}
               name="newPassword"
               className="form-control"
               value={formData.newPassword}
               onChange={handleInputChange}
               required
             />
+            <span
+              onClick={() => setShowNewPassword(!showNewPassword)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "38px",
+                cursor: "pointer",
+              }}
+            >
+              {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
           </div>
-          <div className="mb-3">
+
+          <div className="mb-3 position-relative">
             <label className="form-label">{t.confirmPwd}</label>
             <input
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               name="confirmPassword"
               className="form-control"
               value={formData.confirmPassword}
               onChange={handleInputChange}
               required
             />
+            <span
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "38px",
+                cursor: "pointer",
+              }}
+            >
+              {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
           </div>
+
           {error && <div className="text-danger">{error}</div>}
           <div className="d-flex justify-content-around">
             <button type="submit" className="btn btn-success">

@@ -1,18 +1,46 @@
-.body-container {
+.bod {
     background: url(
         "https://t3.ftcdn.net/jpg/02/05/56/54/360_F_205565499_waqtbwXp6KukIa7ilco7GfIErIjIK117.jpg"
     ) no-repeat center center/cover;
     min-height: 100vh;
-    display: flex;
+    /* display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center; */
+  }
+  #add-product{
+    margin-left: 80%;
   }
   
   @media (max-width: 700px) {
-    .body-container {
+    .bod {
         background: url(
             "https://i.pinimg.com/736x/04/e5/47/04e5479ee632f638057d6521582f2cd7.jpg"
         )no-repeat center center/cover;
     }
+    #add-product{
+        margin-left: 50%;
+      }
   }
   
+  /* Add this to Body.css */
+
+@keyframes jump {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-jump {
+    animation: jump 0.5s ease;
+  }
+  
+
+::-webkit-scrollbar{
+    display: none;
+}
