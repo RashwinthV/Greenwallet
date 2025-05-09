@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ProductRequest from "../components/productRequest";
-import "../styles/body.css"
+import "../styles/Body.css"
 
 const vegetableData = {
   en: [
