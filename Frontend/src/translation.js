@@ -61,6 +61,7 @@ const translations = {
 
     // Entry Component
     addRecord: "Request product",
+    Notifiations:"Notifications",
     type: "Type",
     product: "Product",
     selectProduct: "Select Product",
@@ -167,6 +168,7 @@ const translations = {
 
     // Entry Component
     addRecord: "தயாரிப்பு கோரிக்கையைச் சேர்க்கவும்",
+    Notifiations: "அறிவிப்புகள்",
     type: "வகை",
     selecttype: "வகையை தேர்வு செய்யவும்",
     product: "தயாரிப்பு",

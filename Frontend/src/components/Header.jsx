@@ -5,9 +5,12 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { MdAdminPanelSettings } from "react-icons/md";
 import "../styles/Header.css";
 import translations from "../translation";
+import axios from "axios";
 
 const Header = ({ language, setLanguage, user, logout }) => {
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
+  const [notification, setnotification] = useState(false);
+
   const texts = {
     en: {
       admin: "Admin",
@@ -30,6 +33,32 @@ const Header = ({ language, setLanguage, user, logout }) => {
       language: "மொழி",
     },
   };
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const storedUser = localStorage.getItem("user");
+        const user = storedUser ? JSON.parse(storedUser) : null;
+
+        if (!user) return;
+
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URI}/user/notifications/${user._id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        if (res.data.success) {
+          setnotification(true);
+        }
+      } catch (error) {
+        console.error("Failed to fetch notifications", error);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
 
   const handleLanguageChange = (lang) => {
     setLanguage(lang);
@@ -66,10 +95,7 @@ const Header = ({ language, setLanguage, user, logout }) => {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          <div
-            className={`collapse navbar-collapse ${isNavbarOpen ? "show" : ""}`}
-            id="navbarNav"
-          >
+          <div className={`collapse navbar-collapse ${isNavbarOpen ? "show" : ""}`} id="navbarNav">
             <ul className="navbar-nav ms-auto gap-3">
               {user?.role === "admin" && (
                 <li className="nav-item">
@@ -103,7 +129,7 @@ const Header = ({ language, setLanguage, user, logout }) => {
                 <>
                   <li className="d-flex align-items-center">
                     <Link
-                      className="nav-item d-flex align-items-center "
+                      className="nav-item d-flex align-items-center"
                       style={{ textDecoration: "none", color: "grey" }}
                       to="/profile"
                     >
@@ -113,10 +139,7 @@ const Header = ({ language, setLanguage, user, logout }) => {
                   </li>
 
                   <li className="nav-item">
-                    <button
-                      className="nav-link btn btn-link"
-                      onClick={handleLogout}
-                    >
+                    <button className="nav-link btn btn-link" onClick={handleLogout}>
                       {texts[language].logout}
                     </button>
                   </li>
@@ -128,6 +151,8 @@ const Header = ({ language, setLanguage, user, logout }) => {
                   </Link>
                 </li>
               )}
+
+              {/* Language Dropdown */}
               <li className="nav-item dropdown">
                 <button
                   className="btn btn-light dropdown-toggle"
@@ -142,37 +167,38 @@ const Header = ({ language, setLanguage, user, logout }) => {
                     src="https://img.icons8.com/nolan/64/google-translate.png"
                     alt="google-translate"
                   />
-                  {/* {texts[language].language} */}
                 </button>
-                <ul
-                  className="dropdown-menu"
-                  aria-labelledby="languageDropdown"
-                >
+                <ul className="dropdown-menu" aria-labelledby="languageDropdown">
                   <li>
-                    <button
-                      className="dropdown-item"
-                      onClick={() => handleLanguageChange("en")}
-                    >
+                    <button className="dropdown-item" onClick={() => handleLanguageChange("en")}>
                       English
                     </button>
                   </li>
                   <li>
-                    <button
-                      className="dropdown-item"
-                      onClick={() => handleLanguageChange("ta")}
-                    >
+                    <button className="dropdown-item" onClick={() => handleLanguageChange("ta")}>
                       தமிழ்
                     </button>
                   </li>
                 </ul>
               </li>
-              <li className="nav-item">
+
+              {/* Notification with bell + label + red dot */}
+              <li className="nav-item position-relative">
                 <Link
                   to="/notification"
-                  className="nav-item d-flex align-items-center "
+                  className="nav-link d-flex align-items-center gap-2 position-relative"
                   style={{ textDecoration: "none", color: "grey" }}
                 >
-                  <i className="bi bi-bell fs-4"></i>{" "}
+                  <div className="position-relative">
+                    <i className="bi bi-bell fs-4"></i>
+                    {notification && (
+                      <span
+                        className="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"
+                        style={{ zIndex: 1 }}
+                      ></span>
+                    )}
+                  </div>
+                  <span>{translations[language].Notifiations}</span>
                 </Link>
               </li>
             </ul>
@@ -180,12 +206,12 @@ const Header = ({ language, setLanguage, user, logout }) => {
         </div>
       </nav>
 
-      {/* Mobile Top Bar (only welcome and language) */}
+      {/* Mobile Top Bar */}
       <div className="d-flex d-md-none justify-content-between align-items-center bg-dark text-white px-3 py-2">
         <span className="fw-semibold">
           <Link className="navbar-brand fw-bold fs-3" to="/">
             Green Wallet
-          </Link>{" "}
+          </Link>
         </span>
         <div className="d-flex align-items-center gap-2">
           {/* Language Dropdown */}
@@ -203,25 +229,15 @@ const Header = ({ language, setLanguage, user, logout }) => {
                 src="https://img.icons8.com/nolan/64/google-translate.png"
                 alt="google-translate"
               />
-              {/* {texts[language].language} */}
             </button>
-            <ul
-              className="dropdown-menu dropdown-menu-end"
-              aria-labelledby="languageDropdownMobile"
-            >
+            <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdownMobile">
               <li>
-                <button
-                  className="dropdown-item"
-                  onClick={() => handleLanguageChange("en")}
-                >
+                <button className="dropdown-item" onClick={() => handleLanguageChange("en")}>
                   English
                 </button>
               </li>
               <li>
-                <button
-                  className="dropdown-item"
-                  onClick={() => handleLanguageChange("ta")}
-                >
+                <button className="dropdown-item" onClick={() => handleLanguageChange("ta")}>
                   தமிழ்
                 </button>
               </li>
@@ -239,39 +255,25 @@ const Header = ({ language, setLanguage, user, logout }) => {
             >
               <i className="bi bi-person-circle fs-5"></i>
             </button>
-            <ul
-              className="dropdown-menu dropdown-menu-end"
-              aria-labelledby="profileDropdownMobile"
-            >
+            <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdownMobile">
               {user?.role === "admin" && (
                 <li className="nav-item d-flex align-items-center">
-                  <Link
-                    className="nav-link mx-4 d-flex align-items-center"
-                    to="/Admin"
-                    onClick={closeNavbar}
-                  >
-                    <MdAdminPanelSettings
-                      size={24}
-                      color="blue"
-                      className="me-2"
-                    />
+                  <Link className="nav-link mx-4 d-flex align-items-center" to="/Admin" onClick={closeNavbar}>
+                    <MdAdminPanelSettings size={24} color="blue" className="me-2" />
                     <span>{texts[language].admin}</span>
                   </Link>
                 </li>
               )}
-
               {user ? (
                 <>
                   <li>
                     <Link className="dropdown-item" to="/profile">
-                      {" "}
                       <i className="bi bi-person-circle fs-5 mx-2"></i>
-                      {user ? user.name : "Guest"}{" "}
+                      {user.name}
                     </Link>
                   </li>
                   <li>
                     <button className="dropdown-item" onClick={handleLogout}>
-                      {" "}
                       <i className="bi bi-box-arrow-in-right fs-4 mx-1"></i>
                       {texts[language].logout}
                     </button>
@@ -284,13 +286,29 @@ const Header = ({ language, setLanguage, user, logout }) => {
                   </Link>
                 </li>
               )}
+              <li className="nav-item position-relative">
+                <Link
+                  to="/notification"
+                  className="dropdown-item d-flex align-items-center gap-2 position-relative"
+                  style={{ paddingRight: "2rem" }}
+                > {notification && (
+                    <span
+                      className="position-absolute top-0 mx-3 my-2 translate-middle p-1 bg-danger border border-light rounded-circle"
+                      style={{ zIndex: 1 }}
+                    ></span>
+                  )}
+                  <i className="bi bi-bell fs-4"></i>
+                  {translations[language].Notifiations}
+                 
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="d-md-none d-flex fixed-bottom justify-content-around  bg-dark py-2 text-white shadow border-top">
+      <nav className="d-md-none d-flex fixed-bottom justify-content-around bg-dark py-2 text-white shadow border-top">
         <Link to="/" className="text-white text-center">
           <i className="bi bi-house fs-4"></i>
         </Link>
@@ -299,9 +317,6 @@ const Header = ({ language, setLanguage, user, logout }) => {
         </Link>
         <Link to="/entry" className="text-white text-center">
           <i className="bi bi-pencil-square fs-4"></i>
-        </Link>
-        <Link to="/notification" className="text-white text-center">
-          <i className="bi bi-bell fs-4"></i>{" "}
         </Link>
         <Link to="/analysis" className="text-white text-center">
           <i className="bi bi-graph-up fs-4"></i>

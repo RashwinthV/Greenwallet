@@ -38,9 +38,10 @@ function Notification() {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        const sorted = res.data.sort(
+        const sorted = res.data.notifications.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
+        
         setNotifications(sorted);
         setloading(false)
       } catch (err) {

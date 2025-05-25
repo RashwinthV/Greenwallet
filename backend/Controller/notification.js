@@ -3,14 +3,19 @@ const Notification = require("../Models/notificationModel");
 //get all notifications
 exports.allNotifications = async (req, res) => {
   try {
-    const notifications = await Notification.find({ userId: req.user.id }).sort(
-      { createdAt: -1 }
-    );
-    res.json(notifications);
+    const notifications = await Notification.find({ userId: req.user.id }).sort({ createdAt: -1 });
+
+    const hasUnread = notifications.some((notif) => !notif.isRead);
+
+    res.json({
+      success: hasUnread,
+      notifications,
+    });
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch notifications" });
   }
 };
+
 
 //update red messsagge
 exports.markAsRead = async (req, res) => {
