@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/product.css"; // Ensure this is correctly imported
 import { FaTrash, FaEdit } from "react-icons/fa"; // Import delete and edit icons
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { ThemeContext } from "../Context/ThemeContext";
 
 function Products() {
   const [products, setProducts] = useState({});
@@ -17,12 +18,13 @@ function Products() {
     price: 0,
     description: "",
   });
-
+  const { darkMode } = useContext(ThemeContext);
   const navigate = useNavigate(); // Initialize navigation hook
 
   useEffect(() => {
     fetchProducts();
   }, []);
+
 
   const fetchProducts = () => {
     axios
@@ -59,7 +61,9 @@ function Products() {
     if (!deleteProductId) return;
 
     axios
-      .delete(`${import.meta.env.VITE_BACKEND_URI}/api/products/${deleteProductId}`)
+      .delete(
+        `${import.meta.env.VITE_BACKEND_URI}/api/products/${deleteProductId}`
+      )
       .then(() => {
         fetchProducts();
         setDeleteProductId(null);
@@ -90,7 +94,10 @@ function Products() {
   };
 
   return (
-    <div className="mt-4 product-container">
+    <div
+      className={`mt-5 product-container
+        ${darkMode ? "bg-dark text-light" : "bg-white text-dark"}`}
+    >
       <h2 className="text-center">Products</h2>
       <button
         className="btn btn-success d-block mx-auto mb-4"
@@ -112,10 +119,16 @@ function Products() {
               {products[category].map((product) => (
                 <div key={product._id} className="product-card">
                   <div className="product-actions">
-                    <button className="edit-btn" onClick={() => handleEdit(product._id)}>
+                    <button
+                      className="edit-btn"
+                      onClick={() => handleEdit(product._id)}
+                    >
                       <FaEdit />
                     </button>
-                    <button className="delete-btn" onClick={() => confirmDelete(product._id)}>
+                    <button
+                      className="delete-btn"
+                      onClick={() => confirmDelete(product._id)}
+                    >
                       <FaTrash />
                     </button>
                   </div>
@@ -138,16 +151,30 @@ function Products() {
       {/* Floating Product Details Modal */}
       {selectedProduct && (
         <div className="product-details-overlay" onClick={closeProductDetails}>
-          <div className="product-details-modal" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="product-details-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button className="close-btn" onClick={closeProductDetails}>
               &times;
             </button>
-            <img src={selectedProduct.image} alt={selectedProduct.name} className="modal-img" />
+            <img
+              src={selectedProduct.image}
+              alt={selectedProduct.name}
+              className="modal-img"
+            />
             <div className="modal-content">
               <h3 className="text-center">{selectedProduct.name}</h3>
-              <p><strong>Type:</strong> {selectedProduct.type || "N/A"}</p>
-              <p><strong>Price:</strong> ₹{selectedProduct.price || "N/A"}</p>
-              <p><strong>Description:</strong> {selectedProduct.description || "No description available"}</p>
+              <p>
+                <strong>Type:</strong> {selectedProduct.type || "N/A"}
+              </p>
+              <p>
+                <strong>Price:</strong> ₹{selectedProduct.price || "N/A"}
+              </p>
+              <p>
+                <strong>Description:</strong>{" "}
+                {selectedProduct.description || "No description available"}
+              </p>
             </div>
           </div>
         </div>
@@ -171,8 +198,8 @@ function Products() {
       )}
 
       {/* Bootstrap Modal for Adding Products */}
-       <div
-        className="modal w-100 fade"
+      <div
+        className={`modal w-100 fade  ${darkMode ? "bg-dark text-light" : "bg-white text-dark"}`}
         id="addProductModal"
         tabIndex="-1"
         aria-hidden="true"
@@ -184,7 +211,7 @@ function Products() {
               <h5 className="modal-title">Add Product</h5>
               <button
                 type="button"
-                className="btn-close"
+                className={`btn-close ${darkMode? "btn-close-white":"btn-close-dark"}`}
                 data-bs-dismiss="modal"
                 aria-label="Close"
                 id="closeModal"

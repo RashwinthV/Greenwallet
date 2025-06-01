@@ -52,7 +52,7 @@ function Dashboard() {
   });
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-5">
       <h2 className="text-center">Dashboard</h2>
 
       {/* Donut Charts for Users, Records, Entries */}

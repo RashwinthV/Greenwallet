@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../styles/AdminSidebar.css"; 
+import { ThemeContext } from "../Context/ThemeContext";
 
 const Sidebar = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const { darkMode } = useContext(ThemeContext);
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -19,7 +22,7 @@ const Sidebar = () => {
     <>
       {/* Sidebar for Desktop */}
       {!isMobile && (
-        <div className="sidebar d-flex flex-column bg-white text-dark vh-100 p-3 border-end">
+        <div className={`sidebar d-flex flex-column mt-5 vh-100 p-3 border-end ${darkMode ? "bg-dark text-light" : "bg-white text-dark"}`}>
           <NavLink
             to="/dashboard"
             className={({ isActive }) =>

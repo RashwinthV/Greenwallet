@@ -8,29 +8,34 @@ import Products from "./pages/products";
 import Users from "./pages/users";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Profile from "./pages/Profile";
-import'./app.css'
+import "./app.css";
 import EditProducts from "./pages/editProducts";
 import EditRecords from "./pages/editRecords";
+import Login from "./pages/Login";
+import { ThemeProvider } from "./Context/ThemeContext";
 
 function App() {
   return (
-   <div className="app">
-            <ToastContainer position="top-right" autoClose={3000} />
+    <div className="app">
+      <ThemeProvider>
+        <ToastContainer position="top-right" autoClose={3000} />
 
-   <Routes>
-        {/* Admin Layout with Nested Routes */}
-        <Route path="/" element={<Home />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/users" element={<Users />} />
-        <Route path="/profile" element={<Profile/>}/>
-        <Route path="/edit-products/:id" element={<EditProducts/>}/>
-        <Route path="/edit-records" element={<EditRecords/>}/>
-        </Route>
-      </Routes>
-   </div>
-      
+        <Routes>
+          {/* Admin Layout with Nested Routes */}
+          <Route path="/" element={<Home />}>
+            <Route path="/login" element={<Login />} />
+
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/edit-products/:id" element={<EditProducts />} />
+            <Route path="/edit-records" element={<EditRecords />} />
+          </Route>
+        </Routes>
+      </ThemeProvider>
+    </div>
   );
-} 
+}
 
 export default App;

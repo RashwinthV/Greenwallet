@@ -21,7 +21,7 @@ function Welcome() {
   }, []);
 
   return (
-    <div className="welcome-page">
+    <div className="welcome-page vh-100">
         <h1>Welcome to the Admin Panel</h1>
       {/* Success Image with Overlaid Quotes */}
       <div className="image-container">
