@@ -3,6 +3,7 @@ const User = require("../Models/userModel");
 const Record = require("../Models/recordsModel");
 const Product = require("../Models/productsModel");
 const product = require("../Models/productsModel");
+const Notification = require("../Models/notificationModel"); // your notification model
 
 exports.Dashboard = async (req, res) => {
   try {
@@ -71,6 +72,9 @@ exports.Deleteproduct = async (req, res) => {
 exports.Addproduct = async (req, res) => {
   try {
     const { name, category, type, image, price, description } = req.body;
+    const { notificationId, id } = req.params;
+    console.log(req.body, "           ", req.params);
+
     const rate = parseInt(price, 10);
 
     if (!name || !category || !type || !image || !price || !description) {
@@ -82,6 +86,7 @@ exports.Addproduct = async (req, res) => {
         .status(400)
         .json({ message: "Invalid price. Must be a positive number." });
     }
+
     const newProduct = new product({
       name,
       category,
@@ -90,7 +95,24 @@ exports.Addproduct = async (req, res) => {
       price: rate,
       description,
     });
+
     await newProduct.save();
+
+    // Update the notification message and requestStatus
+    if (notificationId && id) {
+      await Notification.findOneAndUpdate(
+        { _id: notificationId},
+        {
+          $set: {
+            message: "Your product request is approved and added to products",
+            requestStatus: "approved",
+            isRead: false,
+            AdminisRead: true,
+            productAdded:true,
+          },
+        }
+      );
+    }
 
     res.status(201).json({ message: "Product added successfully!" });
   } catch (err) {
@@ -123,5 +145,19 @@ exports.UpdateAProduct = async (req, res) => {
     res.json(updatedProduct);
   } catch (error) {
     res.status(500).json({ message: "Error updating product", error });
+  }
+};
+
+exports.AdminmarkAsRead = async (req, res) => {
+  const { notificationid } = req.params;
+  try {
+    const updated = await Notification.findByIdAndUpdate(
+      { _id: notificationid },
+      { AdminisRead: true },
+      { new: true }
+    );
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to mark as read" });
   }
 };

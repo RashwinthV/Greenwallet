@@ -1,21 +1,37 @@
 const Notification = require("../Models/notificationModel");
+const User = require("../Models/userModel");
 
 //get all notifications
 exports.allNotifications = async (req, res) => {
   try {
-    const notifications = await Notification.find({ userId: req.user.id }).sort({ createdAt: -1 });
+    const notifications = await Notification.find({ userId: req.user.id }).sort(
+      { createdAt: -1 }
+    );
+    const { id } = req.params;
+    const isadmin = await User.findOne({ _id: id });
 
     const hasUnread = notifications.some((notif) => !notif.isRead);
+    if (isadmin.role === "admin") {
+      const notifications = await Notification.find();
+          const adminread = notifications.some((notif) => !notif.AdminisRead);
 
+      return res.json({
+        success: hasUnread,
+        adminread,
+        notifications,
+      });
+    }
     res.json({
       success: hasUnread,
+      adminread,
       notifications,
     });
   } catch (err) {
+    console.log(err);
+
     res.status(500).json({ error: "Failed to fetch notifications" });
   }
 };
-
 
 //update red messsagge
 exports.markAsRead = async (req, res) => {
@@ -64,5 +80,24 @@ exports.Productrequest = async (req, res) => {
     res
       .status(500)
       .json({ message: "Failed to post your request. Please try again." });
+  }
+};
+
+exports.RejectRequest = async (req, res) => {
+  const { id, notificationid } = req.params;
+
+  try {
+    const notification = await Notification.findById(notificationid);
+
+    if (!notification) return res.status(404).send("Not found");
+
+    notification.requestStatus = "rejected";
+    notification.isRead = true;
+    notification. message="Your product request has been rejected",
+    await notification.save();
+
+    res.send({ message: "Rejected", notification });
+  } catch (err) {
+    res.status(500).send("Server error");
   }
 };

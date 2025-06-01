@@ -5,6 +5,7 @@ import "../styles/product.css"; // Ensure this is correctly imported
 import { FaTrash, FaEdit } from "react-icons/fa"; // Import delete and edit icons
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import { ThemeContext } from "../Context/ThemeContext";
+import AddProductModal from "../comp/Addproduct";
 
 function Products() {
   const [products, setProducts] = useState({});
@@ -198,123 +199,13 @@ function Products() {
       )}
 
       {/* Bootstrap Modal for Adding Products */}
-      <div
-        className={`modal w-100 fade  ${darkMode ? "bg-dark text-light" : "bg-white text-dark"}`}
-        id="addProductModal"
-        tabIndex="-1"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-          <div className="modal-content">
-            {/* Modal Header */}
-            <div className="modal-header">
-              <h5 className="modal-title">Add Product</h5>
-              <button
-                type="button"
-                className={`btn-close ${darkMode? "btn-close-white":"btn-close-dark"}`}
-                data-bs-dismiss="modal"
-                aria-label="Close"
-                id="closeModal"
-              ></button>
-            </div>
+     <AddProductModal
+  darkMode={darkMode}
+  newProduct={newProduct}
+  handleInputChange={handleInputChange}
+  handleSubmit={handleSubmit}
+/>
 
-            {/* Modal Body */}
-            <div className="modal-body">
-              <form onSubmit={handleSubmit}>
-                {/* Product Name */}
-                <div className="mb-3">
-                  <label className="form-label">Product Name</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="name"
-                    value={newProduct.name}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                {/* Category Dropdown */}
-                <div className="mb-3">
-                  <label className="form-label">Category</label>
-                  <select
-                    className="form-select"
-                    name="category"
-                    value={newProduct.category}
-                    onChange={handleInputChange}
-                    required
-                  >
-                    <option value="consumable">Consumable</option>
-                    <option value="fertilizer">Fertilizer</option>
-                    <option value="pesticide">Pesticide</option>
-                  </select>
-                </div>
-
-                {/* Type Dropdown */}
-                <div className="mb-3">
-                  <label className="form-label">Type</label>
-                  <select
-                    className="form-select"
-                    name="type"
-                    value={newProduct.type}
-                    onChange={handleInputChange}
-                    required
-                  >
-                    <option value="vegetable">Vegetable</option>
-                    <option value="Fruit">Fruit</option>
-                    <option value="Coconut">Coconut</option>
-                    <option value="chemical">Chemical</option>
-                    <option value="organic">Organic</option>
-                  </select>
-                </div>
-
-                {/* Price Input */}
-                <div className="mb-3">
-                  <label className="form-label">Price (₹)</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    name="price"
-                    value={newProduct.price}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                {/* Description */}
-                <div className="mb-3">
-                  <label className="form-label">Description</label>
-                  <textarea
-                    className="form-control"
-                    name="description"
-                    value={newProduct.description}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                {/* Image URL */}
-                <div className="mb-3">
-                  <label className="form-label">Image URL</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="image"
-                    value={newProduct.image}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                {/* Save Button */}
-                <button type="submit" className="btn btn-primary w-100">
-                  Save Product
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

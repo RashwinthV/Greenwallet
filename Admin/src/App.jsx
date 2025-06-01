@@ -13,6 +13,7 @@ import EditProducts from "./pages/editProducts";
 import EditRecords from "./pages/editRecords";
 import Login from "./pages/Login";
 import { ThemeProvider } from "./Context/ThemeContext";
+import Notification from "./pages/Notification";
 
 function App() {
   return (
@@ -29,7 +30,9 @@ function App() {
             <Route path="/products" element={<Products />} />
             <Route path="/users" element={<Users />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/edit-products/:id" element={<EditProducts />} />
+                        <Route path="/notification" element={<Notification />} />
+
+                        <Route path="/edit-products/:id" element={<EditProducts />} />
             <Route path="/edit-records" element={<EditRecords />} />
           </Route>
         </Routes>

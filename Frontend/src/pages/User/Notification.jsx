@@ -41,9 +41,10 @@ function Notification() {
         const sorted = res.data.notifications.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
-        
+        if(res.data.success){
         setNotifications(sorted);
-        setloading(false)
+        }        setloading(false)
+
       } catch (err) {
         console.error("Error fetching notifications:", err);
       }
@@ -218,6 +219,12 @@ function Notification() {
               <p>
                 <strong>Posted At:</strong>{" "}
                 {new Date(selectedNotification.createdAt).toLocaleDateString(
+                  "en-GB"
+                )}
+              </p>
+              <p>
+                <strong>Posted At:</strong>{" "}
+                {new Date(selectedNotification.updatedAt).toLocaleDateString(
                   "en-GB"
                 )}
               </p>

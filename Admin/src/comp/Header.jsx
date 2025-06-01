@@ -32,7 +32,7 @@ const Header = ({ toggleSidebar }) => {
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        if (res.data.success) {
+        if (res.data.adminread) {
           setNotification(true);
         }
       } catch (error) {
@@ -53,7 +53,7 @@ const Header = ({ toggleSidebar }) => {
     <header
       className={`py-3 px-4 d-flex justify-content-between align-items-center shadow-sm position-fixed top-0  w-100 
         ${darkMode ? "bg-dark text-light" : "bg-white text-dark"}`}
-        style={{ zIndex: 1000 }}
+      style={{ zIndex: 1000 }}
     >
       <h2 className="m-0">
         <Link
@@ -87,7 +87,9 @@ const Header = ({ toggleSidebar }) => {
           </button>
 
           <ul
-            className={`dropdown-menu dropdown-menu-end ${darkMode ? "bg-dark text-light" : "bg-white text-dark"}`}
+            className={`dropdown-menu dropdown-menu-end ${
+              darkMode ? "bg-dark text-light" : "bg-white text-dark"
+            }`}
             aria-labelledby="dropdownMenuButton"
           >
             {loggedIn ? (

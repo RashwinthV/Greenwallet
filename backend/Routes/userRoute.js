@@ -21,7 +21,7 @@ const {
   sendPasswordEmail,
   PasswordUpdateInfo,
 } = require("../Controller/Email/Password");
-const { allNotifications, markAsRead, Productrequest } = require("../Controller/notification");
+const { allNotifications, markAsRead, Productrequest, RejectRequest } = require("../Controller/notification");
 
 const userRoute = express.Router();
 
@@ -64,6 +64,7 @@ userRoute.put("/password/:id", authMiddleware, password);
 //notification route
 userRoute.get('/notifications/:id',authMiddleware,allNotifications)
 userRoute.put('/:id/notifications/mark-read/:notificationid',authMiddleware,markAsRead)
+userRoute.put('/:id/notifications/reject/:notificationid',authMiddleware,RejectRequest)
 
 
 //request Route
