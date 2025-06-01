@@ -41,7 +41,8 @@ function Notification() {
         const sorted = res.data.notifications.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
-        if(res.data.success){
+        
+        if(!res.data.isadmin){
         setNotifications(sorted);
         }        setloading(false)
 

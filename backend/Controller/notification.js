@@ -4,10 +4,12 @@ const User = require("../Models/userModel");
 //get all notifications
 exports.allNotifications = async (req, res) => {
   try {
-    const notifications = await Notification.find({ userId: req.user.id }).sort(
+    
+    const { id } = req.params;
+    const notifications = await Notification.find({ userId:id }).sort(
       { createdAt: -1 }
     );
-    const { id } = req.params;
+    
     const isadmin = await User.findOne({ _id: id });
 
     const hasUnread = notifications.some((notif) => !notif.isRead);
@@ -20,12 +22,15 @@ exports.allNotifications = async (req, res) => {
         adminread,
         notifications,
       });
-    }
-    res.json({
+    }else{
+
+       res.json({
       success: hasUnread,
-      adminread,
+      isadmin:false,
       notifications,
     });
+    }
+   
   } catch (err) {
     console.log(err);
 

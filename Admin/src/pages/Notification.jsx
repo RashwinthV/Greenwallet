@@ -7,7 +7,7 @@ import {
   FaEnvelopeOpen,
 } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 import { Modal, Button } from "react-bootstrap";
 import { ThemeContext } from "../Context/ThemeContext";
@@ -78,7 +78,6 @@ function Notification() {
     setShowModal(true);
 
     if (!notification.AdminisRead && user) {
-        
       try {
         const token = localStorage.getItem("token");
         await axios.put(
@@ -173,9 +172,10 @@ function Notification() {
       };
 
       await axios.post(
-        `${import.meta.env.VITE_BACKEND_URI}/api/${user._id}/products/${selectedNotification._id}`,
+        `${import.meta.env.VITE_BACKEND_URI}/api/${user._id}/products/${
+          selectedNotification._id
+        }`,
         newProduct
-
       );
 
       setNewProduct({
@@ -198,7 +198,8 @@ function Notification() {
           n._id === selectedNotification._id
             ? {
                 ...n,
-                message: "Your product request is approved and added to products.",
+                message:
+                  "Your product request is approved and added to products.",
                 requestStatus: "approved",
                 productAdded: true,
                 isRead: true,
@@ -280,7 +281,12 @@ function Notification() {
             <div className="card-body d-flex align-items-start">
               {getIcon(n.type)}
               <div className="flex-grow-1">
-                <p className="card-text mb-1">{n.message}</p>
+                {n.type === "request" ? (
+                  <p className="card-text mb-1">{`request to add ${n.productName}`}</p>
+                ) : (
+                  <p className="card-text mb-1">{`${n.message}`}</p>
+                )}
+
                 <small className="text-muted">
                   {new Date(n.createdAt).toLocaleDateString("en-GB")}
                 </small>
@@ -368,14 +374,20 @@ function Notification() {
               <Button
                 variant="danger"
                 onClick={handleRejectClick}
-                disabled={selectedNotification.requestStatus === "rejected"|| selectedNotification.requestStatus === "approved"}
+                disabled={
+                  selectedNotification.requestStatus === "rejected" ||
+                  selectedNotification.requestStatus === "approved"
+                }
               >
                 Reject
               </Button>
               <Button
                 variant="primary"
                 onClick={handleApprove}
-                disabled={selectedNotification.requestStatus === "rejected"|| selectedNotification.requestStatus === "approved"}
+                disabled={
+                  selectedNotification.requestStatus === "rejected" ||
+                  selectedNotification.requestStatus === "approved"
+                }
               >
                 Approve
               </Button>
@@ -407,7 +419,10 @@ function Notification() {
         <Modal.Footer
           className={darkMode ? "bg-dark text-light" : "bg-white text-dark"}
         >
-          <Button variant="secondary" onClick={() => setShowRejectConfirm(false)}>
+          <Button
+            variant="secondary"
+            onClick={() => setShowRejectConfirm(false)}
+          >
             Cancel
           </Button>
           <Button variant="danger" onClick={handleConfirmReject}>
@@ -445,9 +460,7 @@ function Notification() {
               </h5>
               <button
                 type="button"
-                className={`btn-close ${
-                  darkMode ? "btn-close-white" : ""
-                }`}
+                className={`btn-close ${darkMode ? "btn-close-white" : ""}`}
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
