@@ -59,7 +59,7 @@ exports.GetProduct = async (req, res) => {
 
 exports.Deleteproduct = async (req, res) => {
   try {
-    const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+    const deletedProduct = await Product.findByIdAndDelete(req.params.productid);
     if (!deletedProduct) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -73,7 +73,6 @@ exports.Addproduct = async (req, res) => {
   try {
     const { name, category, type, image, price, description } = req.body;
     const { notificationId, id } = req.params;
-    console.log(req.body, "           ", req.params);
 
     const rate = parseInt(price, 10);
 

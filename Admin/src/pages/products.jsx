@@ -10,7 +10,7 @@ import AddProductModal from "../comp/Addproduct";
 function Products() {
   const [products, setProducts] = useState({});
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [deleteProductId, setDeleteProductId] = useState(null); // Track product to delete
+  const [deleteProductId, setDeleteProductId] = useState(null);
   const [newProduct, setNewProduct] = useState({
     name: "",
     category: "consumable",
@@ -20,7 +20,7 @@ function Products() {
     description: "",
   });
   const { darkMode } = useContext(ThemeContext);
-  const navigate = useNavigate(); // Initialize navigation hook
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     fetchProducts();
@@ -60,10 +60,16 @@ function Products() {
   };
   const handleDelete = () => {
     if (!deleteProductId) return;
+      const token = localStorage.getItem("token");
+      const user= JSON.parse(localStorage.getItem("user"));
+      const id=user?._id
 
     axios
       .delete(
-        `${import.meta.env.VITE_BACKEND_URI}/api/products/${deleteProductId}`
+        `${import.meta.env.VITE_BACKEND_URI}/api/${id}/products/${deleteProductId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       )
       .then(() => {
         fetchProducts();

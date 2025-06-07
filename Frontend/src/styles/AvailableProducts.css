@@ -1,0 +1,27 @@
+.product-grid {
+  display: grid;
+  gap: 1rem;
+  /* Default desktop 2 columns */
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Tablet breakpoint - 3 columns */
+@media (min-width: 768px) and (max-width: 991px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Mobile breakpoint - 2 columns, max 4 items shown in React */
+@media (max-width: 767px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Card image style */
+.product-card .card-img-top {
+  object-fit: cover;
+  width: 100%;
+  height: 150px;
+}

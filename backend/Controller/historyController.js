@@ -133,7 +133,6 @@ try {
 exports.Deleterecord = async (req, res) => {
   try {
     const { id, recordId } = req.params;
-    console.log("Deleting record:", req.params);
 
     // ✅ Find the user record
     const userRecord = await Record.findOne({ userId: id });

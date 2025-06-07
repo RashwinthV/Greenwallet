@@ -104,8 +104,8 @@ function Notification() {
     if (selectedNotification) {
       setNewProduct({
         name: selectedNotification.productName || "",
-        type: selectedNotification.productType || "",
-        category: selectedNotification.productCategory || "",
+        type: "",
+        category:"",
         description: "",
         price: "",
         image: "",
@@ -170,12 +170,17 @@ function Notification() {
         ...newProduct,
         notificationId: selectedNotification._id,
       };
+      const token = localStorage.getItem("token");
 
       await axios.post(
         `${import.meta.env.VITE_BACKEND_URI}/api/${user._id}/products/${
           selectedNotification._id
         }`,
-        newProduct
+        
+        newProduct,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
 
       setNewProduct({
@@ -467,95 +472,79 @@ function Notification() {
             </div>
             <form onSubmit={handleSubmit}>
               <div className="modal-body">
-                <div className="mb-3">
-                  <label htmlFor="name" className="form-label">
-                    Product Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    className="form-control"
-                    value={newProduct.name}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="category" className="form-label">
-                    Category
-                  </label>
-                  <input
-                    type="text"
-                    id="category"
-                    name="category"
-                    className="form-control"
-                    value={newProduct.category}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="type" className="form-label">
-                    Type
-                  </label>
-                  <input
-                    type="text"
-                    id="type"
-                    name="type"
-                    className="form-control"
-                    value={newProduct.type}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="price" className="form-label">
-                    Price
-                  </label>
-                  <input
-                    type="number"
-                    id="price"
-                    name="price"
-                    className="form-control"
-                    value={newProduct.price}
-                    onChange={handleInputChange}
-                    required
-                    min="0"
-                    step="0.01"
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="description" className="form-label">
-                    Description
-                  </label>
-                  <textarea
-                    id="description"
-                    name="description"
-                    className="form-control"
-                    value={newProduct.description}
-                    onChange={handleInputChange}
-                    rows="3"
-                  ></textarea>
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="image" className="form-label">
-                    Image URL
-                  </label>
-                  <input
-                    type="text"
-                    id="image"
-                    name="image"
-                    className="form-control"
-                    value={newProduct.image}
-                    onChange={handleInputChange}
-                  />
-                </div>
+                {/* Input Fields */}
+                {[
+                  { label: "Product Name", name: "name", type: "text" },
+                  {
+                    label: "Category",
+                    name: "category",
+                    type: "select",
+                    options: ["consumable", "fertilizer", "pesticide"],
+                  },
+                  {
+                    label: "Type",
+                    name: "type",
+                    type: "select",
+                    options: [
+                      "vegetable",
+                      "Fruit",
+                      "Coconut",
+                      "chemical",
+                      "organic",
+                    ],
+                  },
+                  { label: "Price", name: "price", type: "number" },
+                  {
+                    label: "Description",
+                    name: "description",
+                    type: "textarea",
+                  },
+                  { label: "Image URL", name: "image", type: "text" },
+                ].map(({ label, name, type, options }) => (
+                  <div className="mb-3" key={name}>
+                    <label htmlFor={name} className="form-label">
+                      {label}
+                    </label>
+                    {type === "textarea" ? (
+                      <textarea
+                        id={name}
+                        name={name}
+                        className="form-control"
+                        rows="3"
+                        value={newProduct[name]}
+                        onChange={handleInputChange}
+                      />
+                    ) : type === "select" ? (
+                      <select
+                        id={name}
+                        name={name}
+                        className="form-select"
+                        value={newProduct[name]}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="">Select {label}</option>
+                        {options.map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        id={name}
+                        name={name}
+                        type={type}
+                        className="form-control"
+                        value={newProduct[name]}
+                        onChange={handleInputChange}
+                        required={name !== "image" && name !== "description"}
+                        min={name === "price" ? "0" : undefined}
+                        step={name === "price" ? "0.01" : undefined}
+                      />
+                    )}
+                  </div>
+                ))}
               </div>
               <div className="modal-footer">
                 <button type="submit" className="btn btn-primary">

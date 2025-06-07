@@ -3,13 +3,20 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "../../styles/AvailableProducts.css";  
 
 function AvailableProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState("");
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  // Fetch products on component mount
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -36,11 +43,12 @@ function AvailableProducts() {
     new Set(filteredProducts.map((product) => product.category))
   );
 
+  const isMobile = windowWidth < 768;
+
   return (
     <div className="container mt-4">
       <h2 className="text-center mb-4">Available Products</h2>
 
-      {/* Category Filter */}
       <div className="mb-3">
         <label className="form-label">Filter by Category</label>
         <select
@@ -49,14 +57,12 @@ function AvailableProducts() {
           value={category}
         >
           <option value="">All Categories</option>
-          
           <option value="consumable">consumable</option>
           <option value="fertilizer">fertilizer</option>
           <option value="pesticide">pesticide</option>
         </select>
       </div>
 
-      {/* Loading State */}
       {loading ? (
         <div className="text-center">
           <div className="spinner-border" role="status">
@@ -75,45 +81,28 @@ function AvailableProducts() {
                 {category.charAt(0).toUpperCase() + category.slice(1)}
               </h3>
 
-              {/* Product Cards */}
-              <div
-                className="d-flex flex-wrap justify-content-start"
-                style={{
-                  gap: "10px",
-                  flexDirection: "column", 
-                  overflowY: "auto", 
-                  maxHeight: "500px", 
-                  paddingBottom: "10px",
-                }}
-              >
-                {categoryProducts.map((product) => (
-                  <div
-                    key={product._id}
-                    className="card mb-4"
-                    style={{
-                      width: "15rem",
-                      height: "auto",
-                      flex: "0 0 auto",
-                      minWidth: "150px",
-                    }}
-                  >
-                    <img
-                      src={product.image}
-                      className="card-img-top"
-                      style={{
-                        objectFit: "cover", 
-                                                height: "200px",
-                        width: "100%", 
-                      }}
-                      alt={product.name}
-                    />
-                    <div className="card-body">
-                      <h5 className="card-title">{product.name}</h5>
-                      <p className="text-muted">Category: {product.category}</p>
-                      <p className="card-text">Price: ${product.price}</p>
+              <div className="product-grid">
+                {categoryProducts.map((product, index) => {
+                  if (isMobile && index >= 4) return null; // Limit to 4 items on mobile
+
+                  return (
+                    <div key={product._id} className="product-card">
+                      <div className="card h-100">
+                        <img
+                          src={product.image}
+                          className="card-img-top"
+                          alt={product.name}
+                          loading="lazy"
+                        />
+                        <div className="card-body">
+                          <h5 className="card-title">{product.name}</h5>
+                          <p className="text-muted">Category: {product.category}</p>
+                          <p className="card-text">Price: ${product.price}</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           );
