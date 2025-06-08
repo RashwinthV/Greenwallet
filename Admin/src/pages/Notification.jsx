@@ -14,7 +14,7 @@ import { ThemeContext } from "../Context/ThemeContext";
 
 function Notification() {
   const [notifications, setNotifications] = useState([]);
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState("request");
   const [user, setUser] = useState(null);
   const [selectedNotification, setSelectedNotification] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -105,7 +105,7 @@ function Notification() {
       setNewProduct({
         name: selectedNotification.productName || "",
         type: "",
-        category:"",
+        category: "",
         description: "",
         price: "",
         image: "",
@@ -176,7 +176,7 @@ function Notification() {
         `${import.meta.env.VITE_BACKEND_URI}/api/${user._id}/products/${
           selectedNotification._id
         }`,
-        
+
         newProduct,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -229,12 +229,6 @@ function Notification() {
     <div className="container mt-5 vh-100">
       {/* Filter Buttons */}
       <div className="btn-group mb-4" role="group">
-        <button
-          className={`btn btn-outline-dark ${filter === "all" ? "active" : ""}`}
-          onClick={() => setFilter("all")}
-        >
-          All
-        </button>
         <button
           className={`btn btn-outline-primary ${
             filter === "request" ? "active" : ""
@@ -397,6 +391,18 @@ function Notification() {
                 Approve
               </Button>
             </>
+          )}
+          {selectedNotification?.type === "message" && (
+            <Button
+              variant="danger"
+              onClick={handleRejectClick}
+              disabled={
+                selectedNotification.requestStatus === "rejected" ||
+                selectedNotification.requestStatus === "approved"
+              }
+            >
+              Reject
+            </Button>
           )}
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             Close

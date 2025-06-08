@@ -7,17 +7,17 @@ import {
   FaEnvelopeOpen,
 } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../../styles/notification.css"
-import LoadingSpinner from "../../components/Loading/Loadong"
+import "../../styles/notification.css";
+import LoadingSpinner from "../../components/Loading/Loadong";
 import { Modal, Button } from "react-bootstrap";
 
 function Notification() {
   const [notifications, setNotifications] = useState([]);
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState("request");
   const [user, setUser] = useState(null);
   const [selectedNotification, setSelectedNotification] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const[loading ,setloading]=useState(true)
+  const [loading, setloading] = useState(true);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -41,11 +41,11 @@ function Notification() {
         const sorted = res.data.notifications.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
-        
-        if(!res.data.isadmin){
-        setNotifications(sorted);
-        }        setloading(false)
 
+        if (!res.data.isadmin) {
+          setNotifications(sorted);
+        }
+        setloading(false);
       } catch (err) {
         console.error("Error fetching notifications:", err);
       }
@@ -99,20 +99,14 @@ function Notification() {
       ? notifications
       : notifications.filter((n) => n.type === filter);
 
-      if (loading) {
-        return <LoadingSpinner />;
-      }
-      
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className="container mt-4 vh-100">
       <div className="btn-group mb-4" role="group">
-        <button
-          className={`btn btn-outline-dark ${filter === "all" ? "active" : ""}`}
-          onClick={() => setFilter("all")}
-        >
-          All
-        </button>
+       
         <button
           className={`btn btn-outline-primary ${
             filter === "request" ? "active" : ""
@@ -180,20 +174,20 @@ function Notification() {
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Notification Details</Modal.Title>
+          <Modal.Title>Notification </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectedNotification && (
             <>
-              <p>
-                <strong>Type:</strong> {selectedNotification.type}
-              </p>
-              <p>
-                <strong>Message:</strong> {selectedNotification.message}
-              </p>
-
               {selectedNotification.type === "request" && (
                 <>
+                  <h5 className="mb-3">Request Notification</h5>
+                  <p>
+                    <strong>Type:</strong> {selectedNotification.type}
+                  </p>
+                  <p>
+                    <strong>Message:</strong> {selectedNotification.message}
+                  </p>
                   <p>
                     <strong>Product Name:</strong>{" "}
                     {selectedNotification.productName || "N/A"}
@@ -209,23 +203,30 @@ function Notification() {
                   <p>
                     <strong>Added to Product List:</strong>{" "}
                     {selectedNotification.productAdded ? "Yes" : "No"}
+                  </p>{" "}
+                  <p>
+                    <strong>Status:</strong>{" "}
+                    {selectedNotification.requestStatus || "N/A"}
+                  </p>{" "}
+                  <p>
+                    <strong>Updated At:</strong>{" "}
+                    {new Date(
+                      selectedNotification.updatedAt
+                    ).toLocaleDateString("en-GB")}
+                  </p>
+                </>
+              )}{" "}
+              {selectedNotification.type === "message" && (
+                <>
+                  <h5 className="mb-3">Message </h5>
+                  <p>
+                    <strong></strong> {selectedNotification.message}
                   </p>
                 </>
               )}
-
-              <p>
-                <strong>Status:</strong>{" "}
-                {selectedNotification.requestStatus || "N/A"}
-              </p>
               <p>
                 <strong>Posted At:</strong>{" "}
                 {new Date(selectedNotification.createdAt).toLocaleDateString(
-                  "en-GB"
-                )}
-              </p>
-              <p>
-                <strong>Posted At:</strong>{" "}
-                {new Date(selectedNotification.updatedAt).toLocaleDateString(
                   "en-GB"
                 )}
               </p>

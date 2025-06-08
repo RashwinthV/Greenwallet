@@ -77,13 +77,12 @@ function AvailableProducts() {
 
           return (
             <div key={category}>
-              <h3 className="mb-3">
+              <h3 className="mb-4 mt-4">
                 {category.charAt(0).toUpperCase() + category.slice(1)}
               </h3>
 
               <div className="product-grid">
                 {categoryProducts.map((product, index) => {
-                  if (isMobile && index >= 4) return null; // Limit to 4 items on mobile
 
                   return (
                     <div key={product._id} className="product-card">

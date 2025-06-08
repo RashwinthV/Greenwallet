@@ -65,7 +65,7 @@ const Footer = ({ language }) => {
               <li>
                 <Link
                   className="footer-link text-light text-decoration-none"
-                  to="/terms"
+                  to="/terms-of-service"
                 >
                   {texts[language].terms}
                 </Link>

@@ -1,8 +1,14 @@
-import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -15,17 +21,20 @@ import Analysis from "./pages/Analysis";
 import EditRecords from "./pages/EditRecords";
 import Profile from "./pages/User/profile";
 import VerifyEmail from "./components/verifyEmail";
-import useAuth from"./Hooks/useAuth";
+import useAuth from "./Hooks/useAuth";
 import LoginLoader from "./components/Loading/loginLoader";
 import Notification from "./pages/User/Notification";
+import About from "./pages/Footer/About";
+import Privacy from "./pages/Footer/Policy&privacy";
+import Contact from "./pages/Footer/Contact";
+import Terms from "./pages/Footer/TermsofService";
 
 function App() {
   const [language, setLanguage] = useState("en");
   const navigate = useNavigate();
   const location = useLocation();
-  const {logout, user, loading } = useAuth(); 
-  const id=user?._id
-
+  const { logout, user, loading } = useAuth();
+  const id = user?._id;
 
   const isAdminRoute = location.pathname.startsWith("/Admin");
 
@@ -43,30 +52,60 @@ function App() {
       </div>
     );
   }
-  
 
   return (
     <>
-      {!isAdminRoute && <Header language={language} setLanguage={setLanguage} user={user}  logout={logout}/>}
+      {!isAdminRoute && (
+        <Header
+          language={language}
+          setLanguage={setLanguage}
+          user={user}
+          logout={logout}
+        />
+      )}
       <ToastContainer />
       <Routes>
         <Route path="/" element={<Body language={language} />} />
         <Route
           path="/records"
-          element={id ? <Records language={language} id={id} /> : <Navigate to="/login" />}
+          element={
+            id ? (
+              <Records language={language} id={id} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
         <Route
           path="/entry"
-          element={id ? <Entry language={language} id={id} /> : <Navigate to="/login" />}
+          element={
+            id ? (
+              <Entry language={language} id={id} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
         <Route path="/login" element={<Login language={language} />} />
         <Route path="/register" element={<Register language={language} />} />
         <Route path="/Analysis" element={<Analysis language={language} />} />
-        <Route path="/edit-records" element={<EditRecords language={language} />} />
+        <Route
+          path="/edit-records"
+          element={<EditRecords language={language} />}
+        />
         <Route path="/profile" element={<Profile language={language} />} />
-        <Route path="/notification" element={<Notification language={language} />} />
-        <Route path="/verify-email" element={<VerifyEmail/>}/>
-
+        <Route
+          path="/notification"
+          element={<Notification language={language} />}
+        />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/about" element={<About language={language} />} />
+        <Route path="/privacy" element={<Privacy language={language} />} />
+        <Route path="/contact" element={<Contact language={language} />} />
+        <Route
+          path="/terms-of-service"
+          element={<Terms language={language} />}
+        />
       </Routes>
       {!isAdminRoute && <Footer language={language} />}
     </>

@@ -4,35 +4,31 @@ const User = require("../Models/userModel");
 //get all notifications
 exports.allNotifications = async (req, res) => {
   try {
-    
     const { id } = req.params;
-    const notifications = await Notification.find({ userId:id }).sort(
-      { createdAt: -1 }
-    );
-    
+    const notifications = await Notification.find({ userId: id }).sort({
+      createdAt: -1,
+    });
+
     const isadmin = await User.findOne({ _id: id });
 
     const hasUnread = notifications.some((notif) => !notif.isRead);
     if (isadmin.role === "admin") {
       const notifications = await Notification.find();
-          const adminread = notifications.some((notif) => !notif.AdminisRead);
+      const adminread = notifications.some((notif) => !notif.AdminisRead);
 
       return res.json({
         success: hasUnread,
         adminread,
         notifications,
       });
-    }else{
-
-       res.json({
-      success: hasUnread,
-      isadmin:false,
-      notifications,
-    });
+    } else {
+      res.json({
+        success: hasUnread,
+        isadmin: false,
+        notifications,
+      });
     }
-   
   } catch (err) {
-
     res.status(500).json({ error: "Failed to fetch notifications" });
   }
 };
@@ -97,11 +93,43 @@ exports.RejectRequest = async (req, res) => {
 
     notification.requestStatus = "rejected";
     notification.isRead = true;
-    notification. message="Your product request has been rejected",
-    await notification.save();
+    (notification.message = "Your product request has been rejected"),
+      await notification.save();
 
     res.send({ message: "Rejected", notification });
   } catch (err) {
     res.status(500).send("Server error");
+  }
+};
+
+exports.message = async (req, res) => {
+  try {
+    const { formData } = req.body;
+    const { id } = req.params;
+
+
+    if (!id || !formData.message) {
+      return res
+        .status(400)
+        .json({ error: "User ID and message are required" });
+    }
+
+    const newNotification = new Notification({
+      userId: id,
+      type: "message",
+      message: formData.message,
+    });
+
+    await newNotification.save();
+
+    res
+      .status(201)
+      .json({
+        message: "Message sent to admin successfully",
+        notification: newNotification,
+      });
+  } catch (error) {
+    console.error("Error saving notification:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
